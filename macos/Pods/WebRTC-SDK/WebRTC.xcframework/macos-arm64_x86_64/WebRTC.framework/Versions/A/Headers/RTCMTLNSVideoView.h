@@ -8,5 +8,15 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-// Deprecated: Use RTCMTLVideoView instead
-@compatibility_alias RTCMTLNSVideoView RTCMTLVideoView;
+#import <AppKit/AppKit.h>
+
+#import <WebRTC/RTCVideoRenderer.h>
+
+RTC_OBJC_EXPORT
+@interface RTC_OBJC_TYPE (RTCMTLNSVideoView) : NSView <RTC_OBJC_TYPE(RTCVideoRenderer)>
+
+@property(nonatomic, weak) id<RTC_OBJC_TYPE(RTCVideoViewDelegate)> delegate;
+
++ (BOOL)isMetalAvailable;
+
+@end

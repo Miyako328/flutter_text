@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_text/assembly_pack/desktop_list/desktop_sys_manager.dart';
 import 'package:flutter_text/splash.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 import 'package:self_utils/init.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:self_utils/utils/shortcuts/quick_actions_method.dart';
@@ -11,10 +12,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'init.dart';
 import 'index.dart';
+import 'controllers/main_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SecurityKeyboardCenter.register();
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     await windowManager.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((value) async {
@@ -27,12 +28,17 @@ Future<void> main() async {
     });
   }
   SecurityKeyboardCenter.register();
-  runZonedGuarded<Future<void>>(() async {
-    FlutterError.onError = _errorHandler;
-    runApp(ProviderScope(child: Assembly()));
-  }, (Object error, StackTrace stackTrace) async {
-    _errorHandler(FlutterErrorDetails(exception: error, stack: stackTrace));
-  });
+  
+  // 初始化GetX控制器
+  Get.put(MainController());
+  
+  runApp(ProviderScope(child: Assembly()));
+  // runZonedGuarded<Future<void>>(() async {
+  //   FlutterError.onError = _errorHandler;
+  //   runApp(ProviderScope(child: Assembly()));
+  // }, (Object error, StackTrace stackTrace) async {
+  //   _errorHandler(FlutterErrorDetails(exception: error, stack: stackTrace));
+  // });
 }
 
 ///BotToastInit BotToastNavigatorObserver toast弹窗初始化

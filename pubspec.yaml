@@ -11,7 +11,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl_utils: ^2.8.2 #国际化
-  drag_and_drop_lists: ^0.3.3 #拖拽
+  drag_and_drop_lists: ^0.4.2 #拖拽
   flutter_slidable: ^3.0.1 #列表侧边菜单
   flutter_screenutil: ^5.9.0 #size适配
   liquid_swipe: ^3.0.0 #滑动组件
@@ -25,17 +25,16 @@ dependencies:
   #  firebase_storage: ^3.0.10
   #  firebase_database: ^3.0.9
   #  firebase_core: 0.4.0+9
-  http: ^0.13.1 #http
-  audioplayers: ^1.0.0 #音频播放
+  http: ^1.2.1 #http
+  audioplayers: ^6.0.0 #音频播放
   flutter_full_pdf_viewer_null_safe: ^1.0.0  #pdf浏览器
   flutter_staggered_animations: ^1.1.1 #动画
   qrscan: ^0.3.3 #二维码
-  flutter_picker: ^2.0.2 #文件选择
+#  flutter_picker: ^2.0.2 #文件选择
   flutter_swiper_null_safety: ^1.0.2 #滑动
   inview_notifier_list: 3.0.0 #视频滚动到播放
 #  connectivity_plus: ^3.0.4
   #  flutter_plugin_record: ^1.0.1 #录音
-  sqflite: ^2.2.6 #sql数据库
   flutter_local_notifications: ^13.0.0 #本地消息推送
   scrollable_positioned_list: ^0.3.2 #滚动
   move_to_background: ^1.0.0 #退出app到后台
@@ -85,8 +84,9 @@ dependencies:
   #video_player插件
   video_player_macos: ^2.0.1
   video_player_win: ^2.2.2
-  flutter_webrtc: ^0.9.48+hotfix.1
+  flutter_webrtc: ^1.0.0
   flutter_background: ^1.0.0
+  google_generative_ai: ^0.2.2
 
     #  本地
   self_utils:

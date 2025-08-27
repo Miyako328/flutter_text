@@ -32,6 +32,11 @@ List<MainWidgetModel> page1 = <MainWidgetModel>[
     icon: const Icon(Icons.mediation),
   ),
   MainWidgetModel(
+    title: ' webRtc list--',
+    route: CallSample(),
+    icon: const Icon(Icons.media_bluetooth_on_outlined),
+  ),
+  MainWidgetModel(
     title: ' webRtc--屏幕分享',
     route: const GetDisplayMediaPage(),
     icon: const Icon(Icons.mediation),
@@ -179,6 +184,16 @@ List<MainWidgetModel> page1 = <MainWidgetModel>[
     title: 'dll 测试页面--',
     route: DllTextPage(),
     icon: const Icon(Icons.dirty_lens),
+  ),
+  MainWidgetModel(
+    title: 'Google 相册解析--',
+    route: GoogleView(),
+    icon: const Icon(Icons.photo_library),
+  ),
+  MainWidgetModel(
+    title: 'iCloud 相册解析--',
+    route: ICloudView(),
+    icon: const Icon(Icons.cloud),
   )
 ];
 
@@ -568,11 +583,6 @@ List<MainWidgetModel> page2 = <MainWidgetModel>[
     title: 'SpeedDial组件',
     route: SpeedDialDemo(),
     icon: const Icon(Icons.list),
-  ),
-  MainWidgetModel(
-    title: 'flutter_picker组件',
-    route: FlutterPickerDemo(),
-    icon: const Icon(Icons.pie_chart),
   ),
   MainWidgetModel(
     title: 'simple_animations组件',

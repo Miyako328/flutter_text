@@ -14,7 +14,12 @@
   "source": {
     "http": "https://github.com/flutter/packages/tree/main/packages/file_selector/file_selector_macos"
   },
-  "source_files": "Classes/**/*",
+  "source_files": "file_selector_macos/Sources/file_selector_macos/**/*.swift",
+  "resource_bundles": {
+    "file_selector_macos_privacy": [
+      "file_selector_macos/Sources/file_selector_macos/Resources/PrivacyInfo.xcprivacy"
+    ]
+  },
   "dependencies": {
     "FlutterMacOS": [
 

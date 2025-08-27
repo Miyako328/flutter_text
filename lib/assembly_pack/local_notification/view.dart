@@ -48,7 +48,7 @@ class LocalNotificationState extends State<LocalNotification> {
           onTap: showNotification,
           child: Text(
             'Demo',
-            style: Theme.of(context).textTheme.headline1,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
       ),

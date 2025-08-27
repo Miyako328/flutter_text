@@ -8,8 +8,8 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-#import <WebRTC/RTCMacros.h>
 #import <WebRTC/RTCMediaStreamTrack.h>
+#import <WebRTC/RTCMacros.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,12 +24,11 @@ RTC_OBJC_EXPORT
 /** The audio source for this audio track. */
 @property(nonatomic, readonly) RTC_OBJC_TYPE(RTCAudioSource) * source;
 
-/** Register a renderer that will receive all audio CMSampleBuffers on this track.
- * Does not retain. */
 - (void)addRenderer:(id<RTC_OBJC_TYPE(RTCAudioRenderer)>)renderer;
 
-/** Deregister a renderer */
 - (void)removeRenderer:(id<RTC_OBJC_TYPE(RTCAudioRenderer)>)renderer;
+
+- (void)removeAllRenderers;
 
 @end
 

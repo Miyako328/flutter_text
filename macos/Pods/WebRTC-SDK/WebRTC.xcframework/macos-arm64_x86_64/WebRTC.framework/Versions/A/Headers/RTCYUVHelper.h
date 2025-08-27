@@ -31,8 +31,8 @@ RTC_OBJC_EXPORT
               dstV:(uint8_t*)dstV
         dstStrideV:(int)dstStrideV
              width:(int)width
-             width:(int)height
-              mode:(RTCVideoRotation)mode;
+             height:(int)height
+              mode:(RTC_OBJC_TYPE(RTCVideoRotation))mode;
 
 + (int)I420ToNV12:(const uint8_t*)srcY
        srcStrideY:(int)srcStrideY
@@ -45,7 +45,7 @@ RTC_OBJC_EXPORT
             dstUV:(uint8_t*)dstUV
       dstStrideUV:(int)dstStrideUV
             width:(int)width
-            width:(int)height;
+            height:(int)height;
 
 + (int)I420ToNV21:(const uint8_t*)srcY
        srcStrideY:(int)srcStrideY
@@ -58,7 +58,7 @@ RTC_OBJC_EXPORT
             dstUV:(uint8_t*)dstUV
       dstStrideUV:(int)dstStrideUV
             width:(int)width
-            width:(int)height;
+            height:(int)height;
 
 + (int)I420ToARGB:(const uint8_t*)srcY
        srcStrideY:(int)srcStrideY

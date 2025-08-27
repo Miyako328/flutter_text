@@ -15,7 +15,7 @@ class GlobalStore {
   static String theme = 'light'; //主题
 
   // webrtc使用
-  static String server = '192.168.32.103'; // 192.168.32.103 172.16.0.117
+  static String server = '192.169.3.24'; // 192.168.32.103 172.16.0.117
   static int port = 8086;
 
   static User? user;

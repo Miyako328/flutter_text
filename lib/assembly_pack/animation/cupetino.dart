@@ -45,12 +45,6 @@ class _CupertinoContextMenuState extends State<CupertinoContextMenuPage> {
                     height: 200,
                     width: 400,
                   ),
-                  previewBuilder: (BuildContext context,
-                      Animation<double> animation, Widget child) {
-                    return Container(
-                      child: Image.asset('assets/banner/back.png'),
-                    );
-                  },
                   actions: <Widget>[
                     CupertinoContextMenuAction(
                       child: const Text('Navigator.pop(context)'),

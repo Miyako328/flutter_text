@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_text/assembly_pack/management/home_page/theme.dart';
 import 'package:flutter_text/index.dart';
 import 'package:flutter_text/init.dart';
+import 'package:flutter_text/models/main_widget_model.dart';
 
 class WindowsSearchPage extends StatefulWidget {
   const WindowsSearchPage({Key? key}) : super(key: key);

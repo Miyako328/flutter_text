@@ -7,8 +7,8 @@ import 'package:flutter_text/model/AComponent.dart';
 import 'package:self_utils/utils/array_helper.dart';
 
 import '../mine_sweep/game_main.dart';
+import '../popup_text/popup_text.dart';
 import '../sudu/sudo_game.dart';
-import '../widget_to_json.dart';
 import 'Reorderable.dart';
 import 'auto_complete_test.dart';
 import 'curve_animated/curve_animated.dart';

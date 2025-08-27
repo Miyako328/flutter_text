@@ -10,7 +10,10 @@
 #endif
 #endif
 
+#import "AudioManager.h"
+#import "AudioProcessingAdapter.h"
 #import "AudioUtils.h"
+#import "CameraUtils.h"
 #import "FlutterRPScreenRecorder.h"
 #import "FlutterRTCDataChannel.h"
 #import "FlutterRTCDesktopCapturer.h"
@@ -20,6 +23,10 @@
 #import "FlutterRTCPeerConnection.h"
 #import "FlutterRTCVideoRenderer.h"
 #import "FlutterWebRTCPlugin.h"
+#import "LocalAudioTrack.h"
+#import "LocalTrack.h"
+#import "LocalVideoTrack.h"
+#import "VideoProcessingAdapter.h"
 
 FOUNDATION_EXPORT double flutter_webrtcVersionNumber;
 FOUNDATION_EXPORT const unsigned char flutter_webrtcVersionString[];

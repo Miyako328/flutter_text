@@ -70,7 +70,19 @@ class MainActivity: FlutterActivity() {
                         InputService.ctx?.physicGesture(AccessibilityService.GLOBAL_ACTION_RECENTS)
                     }
                 }
+                "input_shell" -> {
+                    var map = call.arguments as Map<*, *>;
+                    val displayMetrics = resources.displayMetrics
+                    var dx = map["x"] as Double * displayMetrics.widthPixels;
+                    var dy = map["y"] as Double * displayMetrics.heightPixels;
+                    var kind = map["kind"] as String;
 
+                    if (kind == "onTapDown") {
+                        InputShell().screenClickStart(dx.toInt(), dy.toInt())
+                    } else if (kind == "onTapUp") {
+                        InputShell().screenClickEnd(dx.toInt(), dy.toInt())
+                    }
+                }
                 "check_permission" -> {
                     if (call.arguments is String) {
                         result.success(XXPermissions.isGranted(context, call.arguments as String))

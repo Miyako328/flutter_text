@@ -20,11 +20,26 @@ variant_for_slice()
   "WebRTC.xcframework/ios-arm64")
     echo ""
     ;;
+  "WebRTC.xcframework/ios-arm64_x86_64-maccatalyst")
+    echo "maccatalyst"
+    ;;
   "WebRTC.xcframework/ios-arm64_x86_64-simulator")
     echo "simulator"
     ;;
   "WebRTC.xcframework/macos-arm64_x86_64")
     echo ""
+    ;;
+  "WebRTC.xcframework/tvos-arm64")
+    echo ""
+    ;;
+  "WebRTC.xcframework/tvos-arm64-simulator")
+    echo "simulator"
+    ;;
+  "WebRTC.xcframework/xros-arm64")
+    echo ""
+    ;;
+  "WebRTC.xcframework/xros-arm64-simulator")
+    echo "simulator"
     ;;
   esac
 }
@@ -35,11 +50,26 @@ archs_for_slice()
   "WebRTC.xcframework/ios-arm64")
     echo "arm64"
     ;;
+  "WebRTC.xcframework/ios-arm64_x86_64-maccatalyst")
+    echo "arm64 x86_64"
+    ;;
   "WebRTC.xcframework/ios-arm64_x86_64-simulator")
     echo "arm64 x86_64"
     ;;
   "WebRTC.xcframework/macos-arm64_x86_64")
     echo "arm64 x86_64"
+    ;;
+  "WebRTC.xcframework/tvos-arm64")
+    echo "arm64"
+    ;;
+  "WebRTC.xcframework/tvos-arm64-simulator")
+    echo "arm64"
+    ;;
+  "WebRTC.xcframework/xros-arm64")
+    echo "arm64"
+    ;;
+  "WebRTC.xcframework/xros-arm64-simulator")
+    echo "arm64"
     ;;
   esac
 }
