@@ -1,81 +1,112 @@
-import 'package:flutter_text/assembly_pack/layout_teach/basic/inheritwidget_test.dart';
-import 'package:flutter_text/assembly_pack/layout_teach/material/material_main.dart';
+import 'package:flutter_text/assembly_pack/layout_teach/study_center_controller.dart';
+import 'package:flutter_text/init.dart';
 import 'package:flutter_text/model/AComponent.dart';
+import 'package:get/get.dart';
 
-import '../../init.dart';
-import 'basic/basic_type.dart';
-
-class StudyCenterPage extends StatefulWidget {
+class StudyCenterPage extends StatelessWidget {
   const StudyCenterPage({super.key});
 
   @override
-  State<StudyCenterPage> createState() => _StudyCenterPageState();
+  Widget build(BuildContext context) {
+    return GetBuilder<StudyCenterController>(
+      init: StudyCenterController(),
+      builder: (StudyCenterController controller) {
+        return Scaffold(
+          appBar: GlobalStore.isMobile
+              ? AppBar(
+                  title: const Text('学习中心'),
+                )
+              : null,
+          body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '学习中心',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '按主题进入学习页面，每个页面里都可以继续查看具体组件示例。',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 18),
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: controller.pages.length,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const SizedBox(height: 10),
+                    itemBuilder: (BuildContext context, int index) {
+                      final PageModel item =
+                          ArrayHelper.get(controller.pages, index)!;
+                      return _StudyCenterTile(item: item);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _StudyCenterPageState extends State<StudyCenterPage> {
-  List<PageModel> _page = [];
+class _StudyCenterTile extends StatelessWidget {
+  final PageModel item;
 
-  @override
-  void initState() {
-    super.initState();
-    _page = [
-      PageModel()
-        ..name = 'BasicTypePage'
-        ..pageUrl = const BasicTypePage(),
-      PageModel()
-        ..name = 'Material3学习'
-        ..pageUrl = const MaterialThreeMain(),
-      PageModel()
-        ..name = 'inheritedWidget'
-        ..pageUrl = const InheritedWidgetTest(),
-    ];
-  }
+  const _StudyCenterTile({required this.item});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GlobalStore.isMobile
-          ? AppBar(
-              title: const Text('学习中心'),
-            )
-          : null,
-      body: Center(
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 5, bottom: 5),
-              child: const Text(
-                '!!!此处的学习组件点击之后都可以查看一些关于组件的tip!!!',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-            Expanded(
-              child: GridView.custom(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 4.0,
-                  crossAxisSpacing: 4.0,
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () {
+        WindowsNavigator().pushWidget(
+          context,
+          item.pageUrl,
+          title: item.name,
+        );
+      },
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(color: Theme.of(context).dividerColor),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: SizedBox(
+          height: 82,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: <Widget>[
+                const Icon(Icons.menu_book_outlined),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        item.name ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        item.desc ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
                 ),
-                childrenDelegate: SliverChildBuilderDelegate((context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      WindowsNavigator().pushWidget(
-                        context,
-                        ArrayHelper.get(_page, index)?.pageUrl,
-                        title: ArrayHelper.get(_page, index)?.name,
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(border: Border.all(width: 1)),
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text('${ArrayHelper.get(_page, index)?.name}'),
-                    ),
-                  );
-                }, childCount: _page.length),
-              ),
+                const Icon(Icons.chevron_right),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

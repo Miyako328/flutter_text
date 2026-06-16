@@ -18,9 +18,7 @@
   "source_files": "Classes/**/*",
   "public_header_files": "Classes/**/*.h",
   "dependencies": {
-    "FlutterMacOS": [
-
-    ]
+    "FlutterMacOS": []
   },
   "platforms": {
     "osx": "10.11"

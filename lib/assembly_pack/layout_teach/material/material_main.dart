@@ -5,6 +5,7 @@ import 'package:flutter_text/assembly_pack/layout_teach/material/communication/b
 import 'package:flutter_text/assembly_pack/layout_teach/material/nagivator/m_appBar.dart';
 import 'package:flutter_text/assembly_pack/management/utils/navigator.dart';
 import 'package:flutter_text/model/AComponent.dart';
+import 'package:get/get.dart';
 import 'package:self_utils/init.dart';
 
 import 'action/m_common_button.dart';
@@ -26,415 +27,264 @@ import 'selection/m_menu.dart';
 import 'selection/m_switch.dart';
 import 'selection/m_timer_picker.dart';
 
-class MaterialThreeMain extends StatefulWidget {
+class MaterialThreeMain extends StatelessWidget {
   const MaterialThreeMain({super.key});
 
   @override
-  State<MaterialThreeMain> createState() => _MaterialThreeMainState();
+  Widget build(BuildContext context) {
+    return GetBuilder<MaterialThreeController>(
+      init: MaterialThreeController(),
+      builder: (MaterialThreeController controller) {
+        return ListView.separated(
+          padding: const EdgeInsets.all(20),
+          itemCount: controller.sections.length,
+          separatorBuilder: (BuildContext context, int index) =>
+              const SizedBox(height: 18),
+          itemBuilder: (BuildContext context, int index) {
+            final MaterialThreeSection section =
+                ArrayHelper.get(controller.sections, index)!;
+            return _MaterialSection(section: section);
+          },
+        );
+      },
+    );
+  }
 }
 
-class _MaterialThreeMainState extends State<MaterialThreeMain> {
-  List<PageModel> _page = [];
-  List<PageModel> _page2 = [];
-  List<PageModel> _page3 = [];
-  List<PageModel> _page4 = [];
-  List<PageModel> _page5 = [];
-  List<PageModel> _page6 = [];
+class MaterialThreeController extends GetxController {
+  final List<MaterialThreeSection> sections = <MaterialThreeSection>[
+    MaterialThreeSection(
+      title: 'Action',
+      icon: Icons.touch_app_outlined,
+      items: <PageModel>[
+        PageModel()
+          ..name = 'Common Button'
+          ..desc = '普通常见的点击按钮'
+          ..pageUrl = const MCommonButton(),
+        PageModel()
+          ..name = 'Float Action Button'
+          ..desc = 'Flutter 里的 FloatingActionButton'
+          ..pageUrl = const MFloatButton(),
+        PageModel()
+          ..name = 'Icon Button'
+          ..desc = 'Material3 版本下的 IconButton'
+          ..pageUrl = const MIconButton(),
+        PageModel()
+          ..name = 'Segmented Button'
+          ..desc = '单选、多选分段选择器'
+          ..pageUrl = const MSegmentedButton(),
+      ],
+    ),
+    MaterialThreeSection(
+      title: 'Communication',
+      icon: Icons.campaign_outlined,
+      items: <PageModel>[
+        PageModel()
+          ..name = 'Badge'
+          ..desc = '消息红点组件'
+          ..pageUrl = const MBadge(),
+        PageModel()
+          ..name = 'linearProgressIndicator'
+          ..desc = '进度条'
+          ..pageUrl = const MProgress(),
+        PageModel()
+          ..name = 'snackBar'
+          ..desc = '底部提示弹框'
+          ..pageUrl = const MSnackBar(),
+      ],
+    ),
+    MaterialThreeSection(
+      title: 'Containment',
+      icon: Icons.inventory_2_outlined,
+      items: <PageModel>[
+        PageModel()
+          ..name = 'AlertDialog'
+          ..desc = '弹窗组件'
+          ..pageUrl = const MAlertDialog(),
+        PageModel()
+          ..name = 'card'
+          ..desc = '卡片视图'
+          ..pageUrl = const MCard(),
+        PageModel()
+          ..name = 'divider'
+          ..desc = '分割线'
+          ..pageUrl = const MDivider(),
+        PageModel()
+          ..name = 'ListTile'
+          ..desc = 'ListTile 展示'
+          ..pageUrl = const MListTile(),
+      ],
+    ),
+    MaterialThreeSection(
+      title: 'Navigator',
+      icon: Icons.alt_route_outlined,
+      items: <PageModel>[
+        PageModel()
+          ..name = 'AppBar'
+          ..desc = 'AppBar 展示'
+          ..pageUrl = const MAppBar(),
+        PageModel()
+          ..name = 'BottomBar'
+          ..desc = '底部 Bar 展示'
+          ..pageUrl = const MBottomBar(),
+        PageModel()
+          ..name = 'MNavigationBar'
+          ..desc = '底部导航栏展示'
+          ..pageUrl = const MNavigationBar(),
+        PageModel()
+          ..name = 'MNavigationDrawer'
+          ..desc = '抽屉导航栏'
+          ..pageUrl = const MNavigationDrawer(),
+        PageModel()
+          ..name = 'MNavigationRail'
+          ..desc = '侧边导航栏'
+          ..pageUrl = const MNavigationRail(),
+        PageModel()
+          ..name = 'MTabBar'
+          ..desc = 'Material3 样式的 TabBar'
+          ..pageUrl = const MTabBar(),
+      ],
+    ),
+    MaterialThreeSection(
+      title: 'Selection',
+      icon: Icons.checklist_outlined,
+      items: <PageModel>[
+        PageModel()
+          ..name = 'MDatePicker'
+          ..desc = 'Material3 样式的日期选择器'
+          ..pageUrl = const MDatePicker(),
+        PageModel()
+          ..name = 'MSwitch'
+          ..desc = 'Material3 样式的 Switch'
+          ..pageUrl = const MSwitch(),
+        PageModel()
+          ..name = 'MMenuAnchor'
+          ..desc = '菜单栏'
+          ..pageUrl = const MMenuAnchor(),
+        PageModel()
+          ..name = 'MShowTimePicker'
+          ..desc = '时间选择器'
+          ..pageUrl = const MShowTimePicker(),
+      ],
+    ),
+    MaterialThreeSection(
+      title: 'Text input',
+      icon: Icons.edit_note_outlined,
+      items: <PageModel>[
+        PageModel()
+          ..name = 'MTextInput'
+          ..desc = '表单输入样式'
+          ..pageUrl = const MTextFieldExamples(),
+      ],
+    ),
+  ];
+}
 
-  @override
-  void initState() {
-    super.initState();
-    _page = [
-      PageModel()
-        ..name = 'Common Button'
-        ..desc = '普通常见的点击按钮'
-        ..pageUrl = const MCommonButton(),
-      PageModel()
-        ..name = 'Float Action Button'
-        ..desc = 'Flutter里FloatingActioningButton'
-        ..pageUrl = const MFloatButton(),
-      PageModel()
-        ..name = 'Icon Button'
-        ..desc = 'Material3版本下的icon Button'
-        ..pageUrl = const MIconButton(),
-      PageModel()
-        ..name = 'Segmented Button'
-        ..desc = '单选多选选择器'
-        ..pageUrl = const MSegmentedButton(),
-    ];
-    _page2 = [
-      PageModel()
-        ..name = 'Badge'
-        ..desc = '消息红点组件'
-        ..pageUrl = const MBadge(),
-      PageModel()
-        ..name = 'linearProgressIndicator'
-        ..desc = '进度条'
-        ..pageUrl = const MProgress(),
-      PageModel()
-        ..name = 'snackBar'
-        ..desc = '底部拦弹框'
-        ..pageUrl = const MSnackBar(),
-    ];
-    _page3 = [
-      PageModel()
-        ..name = 'AlertDialog'
-        ..desc = '弹窗组件'
-        ..pageUrl = const MAlertDialog(),
-      PageModel()
-        ..name = 'card'
-        ..desc = '卡片视图'
-        ..pageUrl = const MCard(),
-      PageModel()
-        ..name = 'divider'
-        ..desc = '分割线'
-        ..pageUrl = const MDivider(),
-      PageModel()
-        ..name = 'ListTile'
-        ..desc = 'ListTile展示'
-        ..pageUrl = const MListTile(),
-    ];
-    _page4 = [
-      PageModel()
-        ..name = 'AppBar'
-        ..desc = 'Appbar展示'
-        ..pageUrl = const MAppBar(),
-      PageModel()
-        ..name = 'BottomBar'
-        ..desc = '底部bar拦展示'
-        ..pageUrl = const MBottomBar(),
-      PageModel()
-        ..name = 'MNavigationBar'
-        ..desc = '底部导航拦展示'
-        ..pageUrl = const MNavigationBar(),
-      PageModel()
-        ..name = 'MNavigationDrawer'
-        ..desc = '抽屉导航拦'
-        ..pageUrl = const MNavigationDrawer(),
-      PageModel()
-        ..name = 'MNavigationRail'
-        ..desc = '侧边导航拦'
-        ..pageUrl = const MNavigationRail(),
-      PageModel()
-        ..name = 'MTabBar'
-        ..desc = 'material3样式的tabbar'
-        ..pageUrl = const MTabBar(),
-    ];
-    _page5 = [
-      PageModel()
-        ..name = 'MDatePicker'
-        ..desc = 'material3样式的时间选择器'
-        ..pageUrl = const MDatePicker(),
-      PageModel()
-        ..name = 'MSwitch'
-        ..desc = 'material3样式的switch'
-        ..pageUrl = const MSwitch(),
-      PageModel()
-        ..name = 'MMenuAnchor'
-        ..desc = '菜单栏'
-        ..pageUrl = const MMenuAnchor(),
-      PageModel()
-        ..name = 'MShowTimePicker'
-        ..desc = '时间选择器--timer'
-        ..pageUrl = const MShowTimePicker(),
-    ];
-    _page6 = [
-      PageModel()
-        ..name = 'MTextInput'
-        ..desc = '表单样式'
-        ..pageUrl = const MTextFieldExamples(),
-    ];
-    setState(() {});
-  }
+class MaterialThreeSection {
+  final String title;
+  final IconData icon;
+  final List<PageModel> items;
+
+  MaterialThreeSection({
+    required this.title,
+    required this.icon,
+    required this.items,
+  });
+}
+
+class _MaterialSection extends StatelessWidget {
+  final MaterialThreeSection section;
+
+  const _MaterialSection({required this.section});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
-            child: const Text(
-              'Action',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.red,
-              ),
-              textAlign: TextAlign.start,
-            ),
-          ),
-          GridView.custom(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 10.0,
-              crossAxisSpacing: 10.0,
-            ),
-            childrenDelegate: SliverChildBuilderDelegate((context, index) {
-              return Card(
-                child: GestureDetector(
-                  onTap: () {
-                    WindowsNavigator().pushWidget(
-                      context,
-                      ArrayHelper.get(_page, index)?.pageUrl,
-                      title: ArrayHelper.get(_page, index)?.name,
-                    );
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('${ArrayHelper.get(_page, index)?.name}'),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text('${ArrayHelper.get(_page, index)?.desc}'),
-                      ],
-                    ),
-                  ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).dividerColor),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Icon(section.icon),
+                const SizedBox(width: 10),
+                Text(
+                  section.title,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-              );
-            }, childCount: _page.length),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
-            child: const Text(
-              'Communication',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.blue,
-              ),
-              textAlign: TextAlign.start,
+                const Spacer(),
+                Text('${section.items.length} 个组件'),
+              ],
             ),
-          ),
-          GridView.custom(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 10.0,
-              crossAxisSpacing: 10.0,
-            ),
-            childrenDelegate: SliverChildBuilderDelegate((context, index) {
-              return Card(
-                child: GestureDetector(
-                  onTap: () {
-                    WindowsNavigator().pushWidget(
-                      context,
-                      ArrayHelper.get(_page2, index)?.pageUrl,
-                      title: ArrayHelper.get(_page2, index)?.name,
-                    );
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('${ArrayHelper.get(_page2, index)?.name}'),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text('${ArrayHelper.get(_page2, index)?.desc}'),
-                      ],
-                    ),
+            const SizedBox(height: 12),
+            ...section.items
+                .map(
+                  (PageModel item) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: _MaterialItemTile(item: item),
                   ),
-                ),
-              );
-            }, childCount: _page2.length),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
-            child: const Text(
-              'Containment',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.orange,
-              ),
-              textAlign: TextAlign.start,
-            ),
-          ),
-          GridView.custom(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 10.0,
-              crossAxisSpacing: 10.0,
-            ),
-            childrenDelegate: SliverChildBuilderDelegate((context, index) {
-              return Card(
-                child: GestureDetector(
-                  onTap: () {
-                    WindowsNavigator().pushWidget(
-                      context,
-                      ArrayHelper.get(_page3, index)?.pageUrl,
-                      title: ArrayHelper.get(_page3, index)?.name,
-                    );
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('${ArrayHelper.get(_page3, index)?.name}'),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text('${ArrayHelper.get(_page3, index)?.desc}'),
-                      ],
+                )
+                .toList(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MaterialItemTile extends StatelessWidget {
+  final PageModel item;
+
+  const _MaterialItemTile({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () {
+        WindowsNavigator().pushWidget(
+          context,
+          item.pageUrl,
+          title: item.name,
+        );
+      },
+      child: SizedBox(
+        height: 64,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            children: <Widget>[
+              const Icon(Icons.widgets_outlined, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      item.name ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ),
-              );
-            }, childCount: _page3.length),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
-            child: const Text(
-              'Navigator',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.red,
-              ),
-              textAlign: TextAlign.start,
-            ),
-          ),
-          GridView.custom(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 10.0,
-              crossAxisSpacing: 10.0,
-            ),
-            childrenDelegate: SliverChildBuilderDelegate((context, index) {
-              return Card(
-                child: GestureDetector(
-                  onTap: () {
-                    WindowsNavigator().pushWidget(
-                      context,
-                      ArrayHelper.get(_page4, index)?.pageUrl,
-                      title: ArrayHelper.get(_page4, index)?.name,
-                    );
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('${ArrayHelper.get(_page4, index)?.name}'),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text('${ArrayHelper.get(_page4, index)?.desc}'),
-                      ],
+                    const SizedBox(height: 4),
+                    Text(
+                      item.desc ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                  ),
+                  ],
                 ),
-              );
-            }, childCount: _page4.length),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
-            child: const Text(
-              'Selection',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.red,
               ),
-              textAlign: TextAlign.start,
-            ),
+              const Icon(Icons.chevron_right),
+            ],
           ),
-          GridView.custom(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 10.0,
-              crossAxisSpacing: 10.0,
-            ),
-            childrenDelegate: SliverChildBuilderDelegate((context, index) {
-              return Card(
-                child: GestureDetector(
-                  onTap: () {
-                    WindowsNavigator().pushWidget(
-                      context,
-                      ArrayHelper.get(_page5, index)?.pageUrl,
-                      title: ArrayHelper.get(_page5, index)?.name,
-                    );
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('${ArrayHelper.get(_page5, index)?.name}'),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text('${ArrayHelper.get(_page5, index)?.desc}'),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }, childCount: _page5.length),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
-            child: const Text(
-              'Text input',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.red,
-              ),
-              textAlign: TextAlign.start,
-            ),
-          ),
-          GridView.custom(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 10.0,
-              crossAxisSpacing: 10.0,
-            ),
-            childrenDelegate: SliverChildBuilderDelegate((context, index) {
-              return Card(
-                child: GestureDetector(
-                  onTap: () {
-                    WindowsNavigator().pushWidget(
-                      context,
-                      ArrayHelper.get(_page6, index)?.pageUrl,
-                      title: ArrayHelper.get(_page6, index)?.name,
-                    );
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('${ArrayHelper.get(_page6, index)?.name}'),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text('${ArrayHelper.get(_page6, index)?.desc}'),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }, childCount: _page6.length),
-          ),
-        ],
+        ),
       ),
     );
   }

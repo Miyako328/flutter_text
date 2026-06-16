@@ -101,6 +101,7 @@ export 'assembly_pack/music_play/music_play.dart';
 export 'assembly_pack/other_charts/list_group.dart';
 export 'assembly_pack/pc_keyboard/pc_keyboard.dart';
 export 'assembly_pack/slide_image/slide_image.dart';
+export 'assembly_pack/component_library/component_library_page.dart';
 export 'assembly_pack/unit/unit_component.dart';
 
 export 'assembly_pack/choose_seat/choose_seat.dart';

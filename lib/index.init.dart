@@ -269,19 +269,14 @@ List<MainWidgetModel> page2 = <MainWidgetModel>[
     icon: const Icon(Icons.list_sharp),
   ),
   MainWidgetModel(
-    title: 'unit 组件列表使用',
-    route: UnitComponentPage(),
-    icon: const Icon(Icons.ad_units),
+    title: '组件能力库',
+    route: const ComponentLibraryPage(),
+    icon: const Icon(Icons.view_in_ar_outlined),
   ),
   MainWidgetModel(
     title: 'ImageCardPage',
     route: const ImageCardPage(),
     icon: const Icon(Icons.image_aspect_ratio_sharp),
-  ),
-  MainWidgetModel(
-    title: 'desktop 组件列表使用',
-    route: DesktopComponentPage(),
-    icon: const Icon(Icons.ad_units),
   ),
   MainWidgetModel(
     title: 'PopupTextPage',
@@ -641,9 +636,9 @@ List<MainWidgetModel> page3 = <MainWidgetModel>[
 
 List<MainWidgetModel> page4 = [
   MainWidgetModel(
-    title: 'unit 组件列表使用',
-    route: UnitComponentPage(),
-    icon: const Icon(Icons.ad_units),
+    title: '组件能力库',
+    route: const ComponentLibraryPage(),
+    icon: const Icon(Icons.view_in_ar_outlined),
   ),
   MainWidgetModel(
     title: '动画常用组件',
@@ -659,11 +654,6 @@ List<MainWidgetModel> page4 = [
     title: '聊天列表--',
     route: ChatListWidget(),
     icon: const Icon(Icons.chat),
-  ),
-  MainWidgetModel(
-    title: 'desktop 组件列表',
-    route: DesktopComponentPage(),
-    icon: const Icon(Icons.desktop_mac),
   ),
   MainWidgetModel(
     title: '日历',

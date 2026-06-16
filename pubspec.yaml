@@ -26,7 +26,7 @@ dependencies:
   #  firebase_database: ^3.0.9
   #  firebase_core: 0.4.0+9
   http: ^1.2.1 #http
-  audioplayers: ^6.0.0 #音频播放
+  audioplayers: 6.0.0 #音频播放
   flutter_full_pdf_viewer_null_safe: ^1.0.0  #pdf浏览器
   flutter_staggered_animations: ^1.1.1 #动画
   qrscan: ^0.3.3 #二维码
@@ -35,7 +35,7 @@ dependencies:
   inview_notifier_list: 3.0.0 #视频滚动到播放
 #  connectivity_plus: ^3.0.4
   #  flutter_plugin_record: ^1.0.1 #录音
-  flutter_local_notifications: ^13.0.0 #本地消息推送
+  flutter_local_notifications: 18.0.1 #本地消息推送
   scrollable_positioned_list: ^0.3.2 #滚动
   move_to_background: ^1.0.0 #退出app到后台
   lpinyin: ^2.0.3   # 汉字转拼音
@@ -54,7 +54,7 @@ dependencies:
   image_compression: ^1.0.3
   video_compress_ds: ^3.1.6 #视频压缩
   sudoku_solver_generator: ^2.1.0+1 #数独api
-  desktop_drop: ^0.4.4 #桌面拖动
+  desktop_drop: ^0.7.0 #桌面拖动
   cross_file: ^0.3.2 #解析xfile
   local_notifier: ^0.1.1 #桌面消息推送
   win_toast: ^0.0.2 #桌面端的toast弹窗
@@ -68,7 +68,7 @@ dependencies:
   webview_flutter: ^3.0.4 #webview
   flutter_riverpod: ^1.0.4 #river
   udp: ^5.0.3 #udp广播
-  file_picker: ^5.2.10 #文件选择器
+  file_picker: ^10.3.10 #文件选择器
   flutter_markdown: ^0.6.6 #markdown
   animated_text_kit: ^4.2.2
   flutter_svg: ^1.0.3
@@ -84,7 +84,7 @@ dependencies:
   #video_player插件
   video_player_macos: ^2.0.1
   video_player_win: ^2.2.2
-  flutter_webrtc: ^1.0.0
+  flutter_webrtc: 1.3.0
   flutter_background: ^1.0.0
   google_generative_ai: ^0.2.2
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_text/assembly_pack/chat_self/user_login/view.dart';
 import 'package:flutter_text/assembly_pack/management/function_page/windows_search_page.dart';
-import 'package:flutter_text/assembly_pack/paint/music_amplitude.dart';
+import 'package:flutter_text/assembly_pack/management/home_page/home_shell_controller.dart';
 import 'package:flutter_text/init.dart';
+import 'package:get/get.dart';
 import 'package:self_utils/widget/management/common/listenable.dart';
 import 'package:self_utils/widget/management/common/view_key.dart';
 import 'package:self_utils/widget/management/widget/stack_view.dart';
@@ -71,6 +72,119 @@ class TabPage {
       required this.builder,
       required this.key,
       this.onTapTab});
+}
+
+class _EditorTopBar extends StatelessWidget {
+  final EditorController controller;
+
+  const _EditorTopBar({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      color: GlobalStore.theme == 'light'
+          ? HomeTheme.lightBgColor
+          : HomeTheme.darkBgColor,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: controller.tabs.length > 1
+                ? Row(
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () {
+                          Utils.debounce(() {
+                            final TabPage lastOne = controller.tabs.last;
+                            controller.close(lastOne.key);
+                          }, delay: const Duration(milliseconds: 180));
+                        },
+                        child: const Icon(Icons.chevron_left),
+                      ),
+                      const SizedBox(width: 20),
+                      Text('${controller.current?.tab ?? ''}'),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+          ),
+          Visibility(
+            visible: controller.current?.key != ContViewKey.search,
+            child: InkWell(
+              onTap: () {
+                controller.open(
+                  key: ContViewKey.search,
+                  tab: '搜索',
+                  contentIfAbsent: (_) => const WindowsSearchPage(),
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.only(right: 20),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.only(
+                        right: 30,
+                        left: 30,
+                        top: 1,
+                        bottom: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(25.0)),
+                        border: Border.all(
+                          color: GlobalStore.theme == 'light'
+                              ? HomeTheme.lightBorderLineColor
+                              : HomeTheme.darkBorderLineColor,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Text(
+                        '搜索内部组件',
+                        style: TextStyle(
+                          color: GlobalStore.theme == 'light'
+                              ? HomeTheme.lightBorderTxColor
+                              : HomeTheme.darkBorderTxColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.search, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              if (GlobalStore.user == null) {
+                WindowsNavigator().pushWidget(
+                  context,
+                  UserLoginPage(),
+                  title: '登陆',
+                );
+              }
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 20),
+              child: GlobalStore.user != null
+                  ? SizedBox(
+                      width: 30,
+                      child: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(GlobalStore.user?.image ?? ''),
+                      ),
+                    )
+                  : const SizedBox(
+                      width: 30,
+                      child: Icon(Icons.person),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _EditorState extends State<Editor> implements EditorListener {
@@ -155,6 +269,7 @@ class _EditorState extends State<Editor> implements EditorListener {
           widget.controller.tabs.firstWhere((element) => element.key == key);
       assert(widget.controller.current != null);
     }
+    Get.find<HomeShellController>().setCurrentKey(key);
     setState(() {});
   }
 
@@ -180,116 +295,22 @@ class _EditorState extends State<Editor> implements EditorListener {
           //       thickness: 0,
           //     ),
           //   ),
-          Container(
-            height: 50,
-            color: GlobalStore.theme == 'light'
-                ? HomeTheme.lightBgColor
-                : HomeTheme.darkBgColor,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    child: widget.controller.tabs.length > 1
-                        ? Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Utils.debounce(() {
-                                    final TabPage lastOne =
-                                        widget.controller.tabs.last;
-                                    widget.controller.close(lastOne.key);
-                                  }, delay: const Duration(milliseconds: 180));
-                                },
-                                child: const Icon(
-                                  Icons.chevron_left,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                child: Text(
-                                    '${widget.controller.current?.tab ?? ''}'),
-                              ),
-                            ],
-                          )
-                        : null,
+          GetBuilder<HomeShellController>(
+            builder: (HomeShellController shellController) {
+              return AnimatedContainer(
+                height: shellController.isImmersive ? 0 : 50,
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeInOut,
+                child: IgnorePointer(
+                  ignoring: shellController.isImmersive,
+                  child: AnimatedOpacity(
+                    opacity: shellController.isImmersive ? 0 : 1,
+                    duration: const Duration(milliseconds: 160),
+                    child: _EditorTopBar(controller: widget.controller),
                   ),
                 ),
-                Visibility(
-                  visible: widget.controller.current?.key != ContViewKey.search,
-                  child: InkWell(
-                    onTap: () {
-                      widget.controller.open(
-                          key: ContViewKey.search,
-                          tab: '搜索',
-                          contentIfAbsent: (_) => const WindowsSearchPage());
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(
-                                right: 30, left: 30, top: 1, bottom: 1),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(25.0)),
-                              border:
-                                  Border.all(color: GlobalStore.theme == 'light'
-                                      ? HomeTheme.lightBorderLineColor
-                                      : HomeTheme.darkBorderLineColor, width: 1.0),
-                            ),
-                            child: Text(
-                              '搜索内部组件',
-                              style: TextStyle(
-                                  color: GlobalStore.theme == 'light'
-                                      ? HomeTheme.lightBorderTxColor
-                                      : HomeTheme.darkBorderTxColor, fontSize: 14),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Icon(
-                            Icons.search,
-                            size: 20,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    if (GlobalStore.user != null) {
-                    } else {
-                      WindowsNavigator()
-                          .pushWidget(context, UserLoginPage(), title: '登陆');
-                    }
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 20),
-                    child: GlobalStore.user != null
-                        ? Row(
-                            children: [
-                              Container(
-                                width: 30,
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      GlobalStore.user?.image ?? ''),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Container(
-                            width: 30,
-                            child: const Icon(Icons.person),
-                          ),
-                  ),
-                )
-              ],
-            ),
+              );
+            },
           ),
           Expanded(
             child: StackView(
@@ -299,53 +320,6 @@ class _EditorState extends State<Editor> implements EditorListener {
           )
         ],
       ),
-    );
-  }
-
-  Widget _buildButton(TabPage page) {
-    return Container(
-      margin: const EdgeInsets.only(left: 2),
-      color: widget.controller.current == page
-          ? Colors.grey[200]
-          : const Color(0x0000000),
-      key: ValueKey(page),
-      child: InkWell(
-          onTap: () {
-            _open(
-                key: page.key,
-                tab: page.tab,
-                contentIfAbsent: page.builder,
-                onTapTab: page.onTapTab);
-            page.onTapTab?.call();
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 12),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 0),
-                  child: Text(page.tab),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: IconButton(
-                    visualDensity: VisualDensity.compact,
-                    iconSize: 14,
-                    constraints: BoxConstraints(),
-                    splashRadius: 16,
-                    icon: const Icon(
-                      Icons.close_sharp,
-                    ),
-                    onPressed: () {
-                      _close(page.key);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          )),
     );
   }
 }

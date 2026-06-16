@@ -15,9 +15,7 @@
   },
   "source_files": "Classes/**/*",
   "dependencies": {
-    "FlutterMacOS": [
-
-    ]
+    "FlutterMacOS": []
   },
   "vendored_frameworks": "third/cef/Chromium Embedded Framework.framework",
   "vendored_libraries": "third/cef/libcef_dll_wrapper.a",

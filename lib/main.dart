@@ -1,6 +1,7 @@
 // import 'package:flutter_doraemonkit/flutter_doraemonkit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_text/assembly_pack/desktop_list/desktop_sys_manager.dart';
+import 'package:flutter_text/assembly_pack/management/home_page/home_shell_controller.dart';
 import 'package:flutter_text/splash.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get.dart';
@@ -18,20 +19,25 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     await windowManager.ensureInitialized();
-    windowManager.waitUntilReadyToShow().then((value) async {
-      await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
-      await windowManager.setSize(const Size(1080, 700));
-      await windowManager.setTitle('flutter学习组件');
-      await windowManager.setMinimumSize(const Size(1080, 700));
-      await windowManager.center();
+    const WindowOptions windowOptions = WindowOptions(
+      size: Size(1080, 700),
+      minimumSize: Size(1080, 700),
+      center: true,
+      title: 'flutter学习组件',
+      titleBarStyle: TitleBarStyle.hidden,
+      windowButtonVisibility: true,
+    );
+    await windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
+      await windowManager.focus();
     });
   }
   SecurityKeyboardCenter.register();
-  
+
   // 初始化GetX控制器
   Get.put(MainController());
-  
+  Get.put(HomeShellController(), permanent: true);
+
   runApp(ProviderScope(child: Assembly()));
   // runZonedGuarded<Future<void>>(() async {
   //   FlutterError.onError = _errorHandler;
@@ -75,7 +81,9 @@ class AssemblyState extends State<Assembly> {
       setState(() {});
     }
     Future<void>.delayed(Duration.zero, () async {
-      ShortCutsQuick(shortCutsAction: list);
+      if (Platform.isAndroid || Platform.isIOS) {
+        ShortCutsQuick(shortCutsAction: list);
+      }
       await init();
     });
     super.initState();
@@ -85,10 +93,16 @@ class AssemblyState extends State<Assembly> {
     await LocateStorage.init().whenComplete(
       () => getTodayShow(),
     );
+    Get.find<HomeShellController>().loadSettings();
     _listenTheme();
   }
 
   void getTodayShow() {
+    if (!GlobalStore.isMobile) {
+      todayShowAd = false;
+      setState(() {});
+      return;
+    }
     final bool? splashShow = LocateStorage.getBoolWithExpire('SplashShow');
     if (splashShow == true) {
       todayShowAd = true;
@@ -122,8 +136,8 @@ class AssemblyState extends State<Assembly> {
                       ? ThemeData.light()
                       : ThemeData.dark(),
                   debugShowCheckedModeBanner: false,
-                  localizationsDelegates: const <
-                      LocalizationsDelegate<dynamic>>[
+                  localizationsDelegates: const <LocalizationsDelegate<
+                      dynamic>>[
                     S.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,

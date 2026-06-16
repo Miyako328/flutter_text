@@ -17,6 +17,7 @@
 #import <WebRTC/RTCCryptoOptions.h>
 #import <WebRTC/RTCDataChannel.h>
 #import <WebRTC/RTCDataChannelConfiguration.h>
+#import <WebRTC/RTCDataPacketCryptor.h>
 #import <WebRTC/RTCDtmfSender.h>
 #import <WebRTC/RTCFrameCryptor.h>
 #import <WebRTC/RTCFrameCryptorKeyProvider.h>

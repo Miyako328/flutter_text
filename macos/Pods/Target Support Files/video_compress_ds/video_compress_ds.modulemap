@@ -1,0 +1,6 @@
+framework module video_compress_ds {
+  umbrella header "video_compress_ds-umbrella.h"
+
+  export *
+  module * { export * }
+}

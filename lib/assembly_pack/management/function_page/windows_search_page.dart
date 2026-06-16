@@ -1,135 +1,157 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_text/assembly_pack/management/home_page/theme.dart';
-import 'package:flutter_text/index.dart';
 import 'package:flutter_text/init.dart';
+import 'package:flutter_text/knowledge/knowledge_search_controller.dart';
 import 'package:flutter_text/models/main_widget_model.dart';
+import 'package:get/get.dart';
 
-class WindowsSearchPage extends StatefulWidget {
+class WindowsSearchPage extends StatelessWidget {
   const WindowsSearchPage({Key? key}) : super(key: key);
 
   @override
-  State<WindowsSearchPage> createState() => _WindowsSearchPageState();
+  Widget build(BuildContext context) {
+    return GetBuilder<KnowledgeSearchController>(
+      init: KnowledgeSearchController(),
+      builder: (KnowledgeSearchController controller) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.fromLTRB(60, 90, 60, 40),
+            child: Column(
+              children: <Widget>[
+                _SearchInput(controller: controller),
+                const SizedBox(height: 32),
+                Expanded(
+                  child: controller.results.isEmpty
+                      ? const _EmptyResult()
+                      : _SearchResultList(results: controller.results),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _WindowsSearchPageState extends State<WindowsSearchPage> {
-  TextEditingController controller = TextEditingController();
-  List<MainWidgetModel> _search = [];
+class _SearchInput extends StatelessWidget {
+  final KnowledgeSearchController controller;
 
-  @override
-  void initState() {
-    super.initState();
-    controller.addListener(() {
-      searchFunc();
-    });
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void searchFunc() {
-    _search.clear();
-    final List<MainWidgetModel> all = [...page1, ...page2, ...page3];
-    all.map((MainWidgetModel e) {
-      if (e.title.toLowerCase().contains(controller.text) &&
-          controller.text.isNotEmpty) {
-        _search.add(e);
-      }
-    }).toList();
-    setState(() {});
-  }
+  const _SearchInput({required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: 100),
-              padding: const EdgeInsets.only(right: 10, left: 10),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                border: Border.all(color: (GlobalStore.theme == 'light'
-                    ? HomeTheme.lightBorderLineColor
-                    : HomeTheme.darkBorderLineColor), width: 1.0),
-              ),
-              width: 400,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: controller,
-                      decoration: const InputDecoration(
-                        hintText: '你想知道些什么....',
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  const Icon(Icons.search),
-                ],
-              ),
-            ),
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.only(right: 12, left: 14),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          border: Border.all(
+            color: GlobalStore.theme == 'light'
+                ? HomeTheme.lightBorderLineColor
+                : HomeTheme.darkBorderLineColor,
+            width: 1.0,
           ),
-          if (_search.isEmpty)
-            Container(
-              margin: const EdgeInsets.only(top: 150),
-              child: Column(
-                children: [
-                  Image.asset(
-                    'images/plane2.gif',
-                    width: 60,
-                  ),
-                ],
-              ),
-            )
-          else
-            RepaintBoundary(
-              child: Container(
-                height: 300,
-                margin: const EdgeInsets.only(top: 100, right: 60, left: 60),
-                child: GridView.builder(
-                  itemCount: _search.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: 1.5,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    final MainWidgetModel item =
-                        ArrayHelper.get(_search, index)!;
-                    return InkWell(
-                      onTap: () {
-                        if (item.route != null) {
-                          WindowsNavigator().pushWidget(
-                            context,
-                            item.route!,
-                            title: item.title,
-                          );
-                        }
-                      },
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            item.icon,
-                            Container(
-                              margin: const EdgeInsets.only(top: 20),
-                              child: Text(item.title),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+        ),
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: TextFormField(
+                controller: controller.textController,
+                decoration: const InputDecoration(
+                  hintText: '搜索组件、能力、关键词...',
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
                 ),
               ),
             ),
+            const Icon(Icons.search),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyResult extends StatelessWidget {
+  const _EmptyResult();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Image.asset(
+            'images/plane2.gif',
+            width: 60,
+          ),
+          const SizedBox(height: 18),
+          Text(
+            '输入关键词查找知识条目',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _SearchResultList extends StatelessWidget {
+  final List<MainWidgetModel> results;
+
+  const _SearchResultList({required this.results});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemCount: results.length,
+      separatorBuilder: (BuildContext context, int index) =>
+          const SizedBox(height: 10),
+      itemBuilder: (BuildContext context, int index) {
+        final MainWidgetModel item = ArrayHelper.get(results, index)!;
+        return InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () {
+            if (item.route != null) {
+              WindowsNavigator().pushWidget(
+                context,
+                item.route!,
+                title: item.displayTitle,
+              );
+            } else {
+              item.onTapFunc?.call(context);
+            }
+          },
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).dividerColor),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: SizedBox(
+              height: 72,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: <Widget>[
+                    item.icon,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        item.displayTitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "flutter_webrtc",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "summary": "Flutter WebRTC plugin for macOS.",
   "description": "A new flutter plugin project.",
   "homepage": "https://github.com/cloudwebrtc/flutter-webrtc",
@@ -17,11 +17,9 @@
     "Classes/**/*"
   ],
   "dependencies": {
-    "FlutterMacOS": [
-
-    ],
+    "FlutterMacOS": [],
     "WebRTC-SDK": [
-      "137.7151.03"
+      "137.7151.04"
     ]
   },
   "platforms": {

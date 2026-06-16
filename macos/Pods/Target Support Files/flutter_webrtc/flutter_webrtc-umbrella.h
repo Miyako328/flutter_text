@@ -14,6 +14,7 @@
 #import "AudioProcessingAdapter.h"
 #import "AudioUtils.h"
 #import "CameraUtils.h"
+#import "FlutterDataPacketCryptor.h"
 #import "FlutterRPScreenRecorder.h"
 #import "FlutterRTCDataChannel.h"
 #import "FlutterRTCDesktopCapturer.h"
