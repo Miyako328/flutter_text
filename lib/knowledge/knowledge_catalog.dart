@@ -106,6 +106,9 @@ class KnowledgeCatalog {
         icon: Icons.desktop_mac_outlined,
         entries: _whereAny(entries, <String>[
           'desktop',
+          'SMB',
+          'NAS',
+          'DropDock',
           'Shell',
           'DLL',
           'Keyboard',

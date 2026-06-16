@@ -161,6 +161,8 @@ export 'assembly_pack/markdown/markdown_page.dart';
 export 'assembly_pack/table_example/component.dart';
 export 'assembly_pack/sort_widget/sort_animation.dart';
 export 'assembly_pack/property_enum/property_enum.dart';
+export 'assembly_pack/smb_mount/smb_file_browser_page.dart';
+export 'assembly_pack/smb_mount/smb_mount_page.dart';
 
 // 共享相册模块
 export 'utils/share_album/google/view.dart';

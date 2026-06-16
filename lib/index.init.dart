@@ -641,6 +641,14 @@ List<MainWidgetModel> page4 = [
     icon: const Icon(Icons.view_in_ar_outlined),
   ),
   MainWidgetModel(
+    title: 'SMB 挂载目录',
+    route: const SmbMountPage(),
+    icon: const Icon(Icons.lan_outlined),
+    category: '桌面与系统能力',
+    description: '配置 NAS SMB 地址和本地挂载目录，作为 DropDock 投递收件箱。',
+    tags: <String>['SMB', 'NAS', 'DropDock', '局域网'],
+  ),
+  MainWidgetModel(
     title: '动画常用组件',
     route: AnimaComponentPage(),
     icon: const Icon(Icons.tablet_android),

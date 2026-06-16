@@ -7,8 +7,10 @@
 		<string></string>
 	</array>
 	<key>com.apple.security.app-sandbox</key>
-	<true/>
+	<false/>
 	<key>com.apple.security.network.client</key>
-    <true/>
+	<true/>
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
 </dict>
 </plist>
