@@ -10,9 +10,9 @@ PODS:
     - FlutterMacOS
   - flutter_local_notifications (0.0.1):
     - FlutterMacOS
-  - flutter_webrtc (1.2.0):
+  - flutter_webrtc (1.4.0):
     - FlutterMacOS
-    - WebRTC-SDK (= 137.7151.04)
+    - WebRTC-SDK (= 144.7559.09)
   - FlutterMacOS (1.0.0)
   - local_auth_darwin (0.0.1):
     - Flutter
@@ -24,6 +24,9 @@ PODS:
   - package_info (0.0.1):
     - FlutterMacOS
   - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - photo_manager (3.9.0):
     - Flutter
     - FlutterMacOS
   - screen_retriever (0.0.1):
@@ -42,7 +45,7 @@ PODS:
     - FlutterMacOS
   - video_player_macos (0.0.1):
     - FlutterMacOS
-  - WebRTC-SDK (137.7151.04)
+  - WebRTC-SDK (144.7559.09)
   - webview_cef (0.0.1):
     - FlutterMacOS
   - window_manager (0.2.0):
@@ -61,6 +64,7 @@ DEPENDENCIES:
   - native_context_menu (from `Flutter/ephemeral/.symlinks/plugins/native_context_menu/macos`)
   - package_info (from `Flutter/ephemeral/.symlinks/plugins/package_info/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
+  - photo_manager (from `Flutter/ephemeral/.symlinks/plugins/photo_manager/darwin`)
   - screen_retriever (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite_darwin (from `Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin`)
@@ -100,6 +104,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info/macos
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
+  photo_manager:
+    :path: Flutter/ephemeral/.symlinks/plugins/photo_manager/darwin
   screen_retriever:
     :path: Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos
   shared_preferences_foundation:
@@ -125,13 +131,14 @@ SPEC CHECKSUMS:
   file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   file_selector_macos: 6280b52b459ae6c590af5d78fc35c7267a3c4b31
   flutter_local_notifications: 13862b132e32eb858dea558a86d45d08daeacfe7
-  flutter_webrtc: 718eae22a371cd94e5d56aa4f301443ebc5bb737
+  flutter_webrtc: 8818ecc96ba6b80b986e1204eb35f07ece28e906
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   local_auth_darwin: d2e8c53ef0c4f43c646462e3415432c4dab3ae19
   local_notifier: ebf072651e35ae5e47280ad52e2707375cb2ae4e
   native_context_menu: bdd0ebd36a94cbb869111d7d057771a1c90c450a
   package_info: e551c138e2e968cbbe8acf7f4afb9a5c672a1b08
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  photo_manager: 25fd77df14f4f0ba5ef99e2c61814dde77e2bceb
   screen_retriever: 4f97c103641aab8ce183fa5af3b87029df167936
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
@@ -139,10 +146,10 @@ SPEC CHECKSUMS:
   url_launcher_macos: 0fba8ddabfc33ce0a9afe7c5fef5aab3d8d2d673
   video_compress_ds: 0bb986618634da4f17d359bd1cf358eb372afb54
   video_player_macos: 327375699d6336b3164f0dc052a68b32ef0fd6ba
-  WebRTC-SDK: 40d4f5ba05cadff14e4db5614aec402a633f007e
+  WebRTC-SDK: e6006119cd730d6315d875e4a421b6cc8bb88833
   webview_cef: 04421327d1066855bca39f8fc105d076fe75f4fc
   window_manager: 1d01fa7ac65a6e6f83b965471b1a7fdd3f06166c
 
-PODFILE CHECKSUM: cd9a7ccf23acf6f5561e777ca820139e27ac63bf
+PODFILE CHECKSUM: fc539d3fdc26c0716a311acbd691bd089ebb6eb0
 
 COCOAPODS: 1.16.2

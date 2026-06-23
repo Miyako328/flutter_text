@@ -19,6 +19,7 @@ RTC_EXTERN NSString *const RTC_CONSTANT_TYPE(RTCFieldTrialFlexFec03Key);
 RTC_EXTERN NSString *const RTC_CONSTANT_TYPE(RTCFieldTrialH264HighProfileKey);
 RTC_EXTERN NSString *const RTC_CONSTANT_TYPE(RTCFieldTrialMinimizeResamplingOnMobileKey);
 RTC_EXTERN NSString *const RTC_CONSTANT_TYPE(RTCFieldTrialUseNWPathMonitor);
+RTC_EXTERN NSString *const RTC_CONSTANT_TYPE(RTCFieldTrialIceHandshakeDtlsKey);
 
 /** The valid value for field trials above. */
 RTC_EXTERN NSString *const RTC_CONSTANT_TYPE(RTCFieldTrialEnabledValue);
@@ -27,4 +28,7 @@ RTC_EXTERN NSString *const RTC_CONSTANT_TYPE(RTCFieldTrialEnabledValue);
  * values. See above for valid keys and values. Must be called before any other
  * call into WebRTC. See: webrtc/system_wrappers/include/field_trial.h
  */
-RTC_EXTERN void RTC_OBJC_TYPE(RTCInitFieldTrialDictionary)(NSDictionary<NSString *, NSString *> *fieldTrials);
+// TODO: bugs.webrtc.org/42220378 - Delete after January 1, 2026.
+RTC_OBJC_DEPRECATED("Pass field trials when building PeerConnectionFactory")
+RTC_EXTERN void RTC_OBJC_TYPE(RTCInitFieldTrialDictionary)(
+    NSDictionary<NSString *, NSString *> *fieldTrials);

@@ -16,6 +16,8 @@ dependencies:
   flutter_screenutil: ^5.9.0 #size适配
   liquid_swipe: ^3.0.0 #滑动组件
   image_picker: ^1.0.7 #图片选择ph
+  wechat_assets_picker: ^9.5.1 #微信风格相册选择
+  wechat_camera_picker: ^4.5.0 #微信风格相机
   curved_navigation_bar: ^1.0.3
   local_auth: ^2.1.2
   flutter_speed_dial: ^6.0.0
@@ -29,7 +31,8 @@ dependencies:
   audioplayers: 6.0.0 #音频播放
   flutter_full_pdf_viewer_null_safe: ^1.0.0  #pdf浏览器
   flutter_staggered_animations: ^1.1.1 #动画
-  qrscan: ^0.3.3 #二维码
+  qrscan:
+    path: ./packages/qrscan #二维码
 #  flutter_picker: ^2.0.2 #文件选择
   flutter_swiper_null_safety: ^1.0.2 #滑动
   inview_notifier_list: 3.0.0 #视频滚动到播放
@@ -84,7 +87,8 @@ dependencies:
   #video_player插件
   video_player_macos: ^2.0.1
   video_player_win: ^2.2.2
-  flutter_webrtc: 1.3.0
+  flutter_webrtc:
+    path: ./packages/flutter_webrtc
   flutter_background: ^1.0.0
   google_generative_ai: ^0.2.2
 
@@ -132,4 +136,3 @@ flutter:
     - assets/images/
     - assets/images/human/
     - assets/banner/
-

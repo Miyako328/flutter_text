@@ -28,6 +28,7 @@ class HomeShellController extends GetxController {
   DockRevealMode dockRevealMode = DockRevealMode.hover;
   bool isDockVisible = true;
   ViewKey? currentKey;
+  bool canGoBack = false;
   Timer? _dockHideTimer;
 
   @override
@@ -70,6 +71,14 @@ class HomeShellController extends GetxController {
       return;
     }
     currentKey = value;
+    update();
+  }
+
+  void setCanGoBack(bool value) {
+    if (canGoBack == value) {
+      return;
+    }
+    canGoBack = value;
     update();
   }
 

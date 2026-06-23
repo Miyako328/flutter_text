@@ -45,9 +45,17 @@ RTC_OBJC_EXPORT
      *
      *  The process is the same for video receivers.
      */
-    - (void)rtpReceiver
-    : (RTC_OBJC_TYPE(RTCRtpReceiver) *)rtpReceiver didReceiveFirstPacketForMediaType
+    - (void)rtpReceiver : (RTC_OBJC_TYPE(RTCRtpReceiver) *)
+                              rtpReceiver didReceiveFirstPacketForMediaType
     : (RTC_OBJC_TYPE(RTCRtpMediaType))mediaType;
+/** Called when the first RTP packet is received after a change in
+ * receptiveness.
+ */
+// TODO: crbug.com/40821064 - remove @optional.
+@optional
+- (void)rtpReceiver:(RTC_OBJC_TYPE(RTCRtpReceiver) *)rtpReceiver
+    didReceiveFirstPacketForMediaTypeAfterReceptiveChange:
+        (RTC_OBJC_TYPE(RTCRtpMediaType))mediaType;
 
 @end
 

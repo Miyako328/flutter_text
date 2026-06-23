@@ -158,10 +158,15 @@ class _CapsuleDock extends StatelessWidget {
                       onEnter: (_) {
                         shellController.registerDockActivity();
                       },
-                      child: _DockSurface(
+                      child: _DockCluster(
                         entries: entries,
                         current: shellController.currentKey,
                         direction: isBottom ? Axis.horizontal : Axis.vertical,
+                        canGoBack: shellController.canGoBack,
+                        onBack: () {
+                          shellController.registerDockActivity();
+                          controller.goBack();
+                        },
                       ),
                     )
                   : _DockHandle(
@@ -174,6 +179,61 @@ class _CapsuleDock extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _DockCluster extends StatelessWidget {
+  final List<_DockEntry> entries;
+  final ViewKey? current;
+  final Axis direction;
+  final bool canGoBack;
+  final VoidCallback onBack;
+
+  const _DockCluster({
+    required this.entries,
+    required this.current,
+    required this.direction,
+    required this.canGoBack,
+    required this.onBack,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget dock = _DockSurface(
+      entries: entries,
+      current: current,
+      direction: direction,
+    );
+    final Widget backButton = AnimatedSwitcher(
+      duration: const Duration(milliseconds: 160),
+      child: canGoBack
+          ? _DockBackButton(
+              key: const ValueKey<String>('dock-back-button'),
+              onTap: onBack,
+            )
+          : const SizedBox.shrink(key: ValueKey<String>('no-dock-back')),
+    );
+
+    if (direction == Axis.horizontal) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          backButton,
+          if (canGoBack) const SizedBox(width: 10),
+          dock,
+        ],
+      );
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        dock,
+        if (canGoBack) const SizedBox(width: 10),
+        backButton,
+      ],
     );
   }
 }
@@ -237,6 +297,56 @@ class _DockSurface extends StatelessWidget {
                   ),
                 )
                 .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DockBackButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _DockBackButton({
+    required this.onTap,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Color surfaceColor = Theme.of(context).colorScheme.surface;
+    final Color primaryColor = Theme.of(context).colorScheme.primary;
+    return Tooltip(
+      message: '返回上一页',
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(999),
+          onTap: onTap,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: surfaceColor.withValues(alpha: 0.74),
+              border: Border.all(
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.32),
+              ),
+              borderRadius: BorderRadius.circular(999),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.07),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: SizedBox(
+              width: 56,
+              height: 56,
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 19,
+                color: primaryColor,
+              ),
+            ),
           ),
         ),
       ),

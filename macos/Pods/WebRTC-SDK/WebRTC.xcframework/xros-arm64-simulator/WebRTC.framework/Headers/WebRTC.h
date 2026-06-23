@@ -1,5 +1,5 @@
 /*
- *  Copyright 2025 The WebRTC project authors. All Rights Reserved.
+ *  Copyright 2026 The WebRTC project authors. All Rights Reserved.
  *
  *  Use of this source code is governed by a BSD-style license
  *  that can be found in the LICENSE file in the root of the source
@@ -53,6 +53,7 @@
 #import <WebRTC/RTCIODevice.h>
 #import <WebRTC/RTCAudioSource.h>
 #import <WebRTC/RTCAudioTrack.h>
+#import <WebRTC/RTCAudioProcessingState.h>
 #import <WebRTC/RTCConfiguration.h>
 #import <WebRTC/RTCDataChannel.h>
 #import <WebRTC/RTCDataChannelConfiguration.h>

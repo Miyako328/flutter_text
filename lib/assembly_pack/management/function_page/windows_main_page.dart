@@ -10,6 +10,8 @@ import 'package:flutter_text/model/img_model.dart';
 import 'package:flutter_text/models/main_widget_model.dart';
 import 'package:get/get.dart';
 
+const String _remoteBannerApi = 'http://192.168.1.108:18980/index.php';
+
 class WindowsMainPage extends StatefulWidget {
   const WindowsMainPage({Key? key}) : super(key: key);
 
@@ -71,9 +73,15 @@ class _HeroBanner extends StatefulWidget {
 class _HeroBannerState extends State<_HeroBanner> {
   late final PageController _pageController;
   late int _currentIndex;
+  bool _hasCheckedRemote = false;
+  bool _useRemoteImages = false;
+  List<ImageModel> _remoteImages = <ImageModel>[];
   Timer? _timer;
 
   List<ImageModel> get _safeImages {
+    if (_useRemoteImages && _remoteImages.isNotEmpty) {
+      return _remoteImages;
+    }
     return widget.images.isEmpty
         ? <ImageModel>[ImageModel()..fileImage = 'images/001.jpeg']
         : widget.images;
@@ -98,10 +106,70 @@ class _HeroBannerState extends State<_HeroBanner> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_hasCheckedRemote) {
+      return;
+    }
+    _hasCheckedRemote = true;
+    _loadRemoteBanner();
+  }
+
+  @override
   void dispose() {
     _timer?.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadRemoteBanner() async {
+    final List<String> urls = List<String>.generate(
+      3,
+      (int index) => _remoteBannerUrl(index),
+    );
+    try {
+      await precacheImage(NetworkImage(urls.first), context)
+          .timeout(const Duration(seconds: 3));
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _currentIndex = 0;
+        _remoteImages = urls
+            .map((String url) => ImageModel()..image = url)
+            .toList(growable: false);
+        _useRemoteImages = true;
+      });
+      if (_pageController.hasClients) {
+        _pageController.jumpToPage(0);
+      }
+    } catch (_) {
+      _disableRemoteBanner();
+    }
+  }
+
+  String _remoteBannerUrl(int index) {
+    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+    return '$_remoteBannerApi?codex_banner=$timestamp-$index';
+  }
+
+  void _disableRemoteBanner() {
+    if (!mounted || !_useRemoteImages) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _currentIndex = 0;
+        _useRemoteImages = false;
+        _remoteImages = <ImageModel>[];
+      });
+      if (_pageController.hasClients) {
+        _pageController.jumpToPage(0);
+      }
+    });
   }
 
   @override
@@ -126,6 +194,19 @@ class _HeroBannerState extends State<_HeroBanner> {
               return Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
+                  if (item.image != null)
+                    Image.network(
+                      item.image!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (
+                        BuildContext context,
+                        Object error,
+                        StackTrace? stackTrace,
+                      ) {
+                        _disableRemoteBanner();
+                        return _FallbackBannerImage(images: widget.images);
+                      },
+                    ),
                   if (item.fileImage != null)
                     Image.asset(
                       item.fileImage!,
@@ -194,6 +275,27 @@ class _HeroBannerState extends State<_HeroBanner> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _FallbackBannerImage extends StatelessWidget {
+  final List<ImageModel> images;
+
+  const _FallbackBannerImage({required this.images});
+
+  @override
+  Widget build(BuildContext context) {
+    final String fallback = images
+            .firstWhere(
+              (ImageModel image) => image.fileImage != null,
+              orElse: () => ImageModel()..fileImage = 'images/001.jpeg',
+            )
+            .fileImage ??
+        'images/001.jpeg';
+    return Image.asset(
+      fallback,
+      fit: BoxFit.cover,
     );
   }
 }

@@ -62,6 +62,8 @@ export 'package:self_utils/utils/test.dart';
 export 'package:self_utils/utils/utils.dart';
 export 'package:self_utils/widget/app_lifecycle_widget.dart';
 export 'package:flutter_text/widget/chat/helper/user/user_db.dart';
+export 'package:flutter_text/widget/app_file_picker/app_file_picker.dart';
+export 'package:flutter_text/widget/live_photo/live_photo.dart';
 export 'package:self_utils/widget/keyboard/keyboard_root.dart';
 export 'package:self_utils/widget/modal_utils.dart';
 export 'package:self_utils/widget/navigator_helper.dart';

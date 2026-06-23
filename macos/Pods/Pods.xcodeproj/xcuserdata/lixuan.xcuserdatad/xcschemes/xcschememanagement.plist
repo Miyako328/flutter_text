@@ -99,6 +99,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>photo_manager-photo_manager_privacy.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>photo_manager.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>screen_retriever.xcscheme</key>
 		<dict>
 			<key>isShown</key>

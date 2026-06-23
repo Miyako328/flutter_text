@@ -42,6 +42,15 @@ class EditorController with GenericListenable<EditorListener> {
     });
   }
 
+  bool get canGoBack => tabs.length > 1;
+
+  void goBack() {
+    if (!canGoBack) {
+      return;
+    }
+    close(tabs.last.key);
+  }
+
   List<TabPage> tabs = <TabPage>[];
 
   TabPage? current;
@@ -247,6 +256,7 @@ class _EditorState extends State<Editor> implements EditorListener {
           tab: tab, builder: contentIfAbsent, key: key, onTapTab: onTapTab));
       controller.open(key, contentIfAbsent);
     }
+    _syncShellState();
     setState(() {});
   }
 
@@ -258,6 +268,7 @@ class _EditorState extends State<Editor> implements EditorListener {
     }
     controller.close(key);
     widget.controller.tabs.removeAt(index);
+    _syncShellState();
     setState(() {});
   }
 
@@ -269,8 +280,14 @@ class _EditorState extends State<Editor> implements EditorListener {
           widget.controller.tabs.firstWhere((element) => element.key == key);
       assert(widget.controller.current != null);
     }
-    Get.find<HomeShellController>().setCurrentKey(key);
+    _syncShellState();
     setState(() {});
+  }
+
+  void _syncShellState() {
+    final HomeShellController shellController = Get.find<HomeShellController>();
+    shellController.setCurrentKey(widget.controller.current?.key);
+    shellController.setCanGoBack(widget.controller.canGoBack);
   }
 
   @override

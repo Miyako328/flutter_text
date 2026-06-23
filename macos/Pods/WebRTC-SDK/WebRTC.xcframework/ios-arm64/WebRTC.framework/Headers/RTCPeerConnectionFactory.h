@@ -12,6 +12,7 @@
 
 #import <WebRTC/RTCMacros.h>
 #import <WebRTC/RTCAudioDeviceModule.h>
+#import <WebRTC/RTCAudioProcessingState.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -70,6 +71,13 @@ RTC_OBJC_EXPORT
                 (nullable id<RTC_OBJC_TYPE(RTCAudioProcessingModule)>)audioProcessingModule;
 
 @property(nonatomic, readonly) RTC_OBJC_TYPE(RTCAudioDeviceModule) *audioDeviceModule;
+
+/** Diagnostic snapshot of the shared audio processing module's state: per
+ *  component, what was requested, what the resolver decided per path, and
+ *  what is actually running. The APM is owned by this factory and shared
+ *  across every peer connection it creates, so this reflects the
+ *  factory-scoped processing state. */
+@property(nonatomic, readonly) RTC_OBJC_TYPE(RTCAudioProcessingState) *audioProcessingState;
 
 /**
  * Valid kind values are kRTCMediaStreamTrackKindAudio and
@@ -130,6 +138,12 @@ RTC_OBJC_EXPORT
                 certificateVerifier:
                     (id<RTC_OBJC_TYPE(RTCSSLCertificateVerifier)>)certificateVerifier
                            delegate:(nullable id<RTC_OBJC_TYPE(RTCPeerConnectionDelegate)>)delegate;
+
+/** Set field trials to use when creating the PeerConnectionFactory.
+ *  Must be called before initializing the factory.
+ *  Format: "Key/Value/Key/Value/" (e.g. "WebRTC-MyFeature/Enabled/")
+ */
++ (void)configureFieldTrials:(nullable NSString *)fieldTrials;
 
 /** Set the options to be used for subsequently created RTCPeerConnections */
 - (void)setOptions:(nonnull RTC_OBJC_TYPE(RTCPeerConnectionFactoryOptions) *)options;

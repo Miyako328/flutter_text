@@ -1,23 +1,24 @@
+ext.kotlin_version = '2.2.0'
+
 buildscript {
-    ext.kotlin_version = '1.9.0'
     repositories {
-//        google()
-//        jcenter()
+        google()
+        mavenCentral()
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/google' }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.5'
+        classpath 'com.android.tools.build:gradle:8.6.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0"
+        classpath 'com.google.gms:google-services:4.4.2'
     }
 }
 
 allprojects {
     repositories {
-//        google()
-//        jcenter()
+        google()
+        mavenCentral()
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/google' }
     }
@@ -29,6 +30,36 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+}
+subprojects { subproject ->
+    subproject.plugins.withId('com.android.library') {
+        def androidExtension = subproject.extensions.findByName('android')
+        if (androidExtension != null && androidExtension.namespace == null) {
+            def manifestFile = subproject.file('src/main/AndroidManifest.xml')
+            def manifestPackage = null
+            if (manifestFile.exists()) {
+                manifestPackage = new XmlSlurper(false, false)
+                        .parse(manifestFile)
+                        .@package
+                        .text()
+            }
+            androidExtension.namespace = manifestPackage ?: subproject.group
+        }
+    }
+}
+gradle.projectsEvaluated {
+    subprojects { subproject ->
+        def debugJavaTask = subproject.tasks.findByName('compileDebugJavaWithJavac')
+        def javaTarget = debugJavaTask?.targetCompatibility?.toString()
+        if (javaTarget == null || javaTarget.isEmpty()) {
+            javaTarget = subproject.name == 'app' ? '17' : '1.8'
+        }
+        subproject.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = javaTarget
+            }
+        }
+    }
 }
 
 tasks.register("clean", Delete) {

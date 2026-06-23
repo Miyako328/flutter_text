@@ -23,13 +23,13 @@
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTSDKBuild</key>
-	<string>24F74</string>
+	<string>25A352</string>
 	<key>DTSDKName</key>
-	<string>macosx15.5</string>
+	<string>macosx26.0</string>
 	<key>DTXcode</key>
-	<string>1640</string>
+	<string>2601</string>
 	<key>DTXcodeBuild</key>
-	<string>16F6</string>
+	<string>17A400</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
 </dict>
