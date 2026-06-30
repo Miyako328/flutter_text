@@ -7,15 +7,20 @@ class KnowledgeSection {
   final String description;
   final IconData icon;
   final List<MainWidgetModel> entries;
+  final MainWidgetModel? mainEntry;
 
   const KnowledgeSection({
     required this.title,
     required this.description,
     required this.icon,
     required this.entries,
+    this.mainEntry,
   });
 
   MainWidgetModel? get primaryEntry {
+    if (mainEntry != null) {
+      return mainEntry;
+    }
     if (entries.isEmpty) {
       return null;
     }
@@ -53,9 +58,9 @@ class KnowledgeCatalog {
         title: '基础与 Material',
         description: '从基础语法、状态传递到 Material3 组件，适合作为系统学习入口。',
         icon: Icons.school_outlined,
+        mainEntry: _findByTitle(entries, 'StudyCenter 学习中心'),
         entries: _whereAny(entries, <String>[
           'StudyCenter',
-          '组件能力库',
           'Material',
           'Basic',
           'TextStyle',
@@ -68,6 +73,7 @@ class KnowledgeCatalog {
         title: '组件与布局',
         description: '常用控件、列表、表单、导航、弹层和布局实验，适合边查边用。',
         icon: Icons.widgets_outlined,
+        mainEntry: _findByTitle(entries, '组件能力库'),
         entries: _whereAny(entries, <String>[
           '组件',
           'Button',
@@ -181,6 +187,18 @@ class KnowledgeCatalog {
       ].join(' ').toLowerCase();
       return normalized.any(text.contains);
     }).toList();
+  }
+
+  static MainWidgetModel? _findByTitle(
+    List<MainWidgetModel> entries,
+    String title,
+  ) {
+    for (final MainWidgetModel item in entries) {
+      if (item.displayTitle == title) {
+        return item;
+      }
+    }
+    return null;
   }
 
   static final Set<String> _sidebarTitles = <String>{

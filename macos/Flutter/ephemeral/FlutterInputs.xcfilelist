@@ -4074,7 +4074,7 @@
 /Users/lixuan/.pub-cache/hosted/pub.flutter-io.cn/xml-6.5.0/lib/xml.dart
 /Users/lixuan/.pub-cache/hosted/pub.flutter-io.cn/xml-6.5.0/lib/xml_events.dart
 /Users/lixuan/.pub-cache/hosted/pub.flutter-io.cn/yaml-3.1.3/LICENSE
-/Users/lixuan/Documents/work/flutter_text/DOES_NOT_EXIST_RERUN_FOR_WILDCARD206066175
+/Users/lixuan/Documents/work/flutter_text/DOES_NOT_EXIST_RERUN_FOR_WILDCARD567899047
 /Users/lixuan/Documents/work/flutter_text/assets/banner/back.png
 /Users/lixuan/Documents/work/flutter_text/assets/banner/fore.png
 /Users/lixuan/Documents/work/flutter_text/assets/banner/mid.png
@@ -4247,9 +4247,7 @@
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/choose_lan/choose_lan.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/choose_seat/StreamText.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/choose_seat/choose_seat.dart
-/Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/choose_seat/helper/room_seat.dart
-/Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/choose_seat/interactive_viewer_child.dart
-/Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/choose_seat/interactive_viewer_main.dart
+/Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/choose_seat/choose_seat_controller.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/component_library/component_library_page.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/compress/image_compress.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/compress/video_compress.dart
@@ -4366,6 +4364,7 @@
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/markdown/drop_down.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/markdown/markdown_editor.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/markdown/markdown_page.dart
+/Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/maze/maze_game.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/mic_stream_demo/mic_stream_demo.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/mine_sweep/cell_container.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/mine_sweep/game_main.dart
@@ -4394,7 +4393,6 @@
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/other_charts/mp_chart.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/other_charts/multiple_charts.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/overlay_demo/overlay_demo.dart
-/Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/paint/board.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/paint/dash.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/paint/example_fifth.dart
 /Users/lixuan/Documents/work/flutter_text/lib/assembly_pack/paint/example_forth.dart

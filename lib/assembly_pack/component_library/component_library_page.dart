@@ -5,7 +5,9 @@ import 'package:flutter_text/assembly_pack/desktop_list/desktop_picker.dart';
 import 'package:flutter_text/assembly_pack/desktop_list/download.dart';
 import 'package:flutter_text/assembly_pack/desktop_list/keyborard_listener.dart';
 import 'package:flutter_text/assembly_pack/management/utils/navigator.dart';
+import 'package:flutter_text/assembly_pack/maze/maze_game.dart';
 import 'package:flutter_text/assembly_pack/mine_sweep/game_main.dart';
+import 'package:flutter_text/assembly_pack/paint/example_forth.dart';
 import 'package:flutter_text/assembly_pack/popup_text/popup_text.dart';
 import 'package:flutter_text/assembly_pack/sudu/sudo_game.dart';
 import 'package:flutter_text/assembly_pack/unit/Reorderable.dart';
@@ -180,6 +182,22 @@ class _ComponentLibraryPageState extends State<ComponentLibraryPage> {
         tags: <String>['Game', 'Grid'],
         icon: Icons.flag_outlined,
         page: MineSweeping(),
+        filter: ComponentLibraryFilter.unit,
+      ),
+      const _ComponentEntry(
+        title: 'Gomoku',
+        description: '五子棋小游戏，支持人机、算法互下和黑棋禁手。',
+        tags: <String>['Game', 'AI'],
+        icon: Icons.blur_on_outlined,
+        page: PaintExampleForth(),
+        filter: ComponentLibraryFilter.unit,
+      ),
+      const _ComponentEntry(
+        title: 'Maze Game',
+        description: '随机迷宫小游戏，支持方向按钮和键盘移动。',
+        tags: <String>['Game', 'Grid'],
+        icon: Icons.route_outlined,
+        page: MazeGamePage(),
         filter: ComponentLibraryFilter.unit,
       ),
       _ComponentEntry(

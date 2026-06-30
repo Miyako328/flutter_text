@@ -527,7 +527,7 @@ class _ShelfBookState extends State<_ShelfBook> {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: 122,
-      height: 174,
+      height: 192,
       child: MouseRegion(
         onEnter: (_) => _setHovering(true),
         onExit: (_) => _setHovering(false),

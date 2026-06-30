@@ -40,20 +40,30 @@ class _WindowsMainPageState extends State<WindowsMainPage> {
       init: KnowledgeHomeController(),
       builder: (KnowledgeHomeController controller) {
         return Scaffold(
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _HeroBanner(images: _imgData),
-                  _Header(controller: controller),
-                  const _StudyPath(),
-                  _SectionList(sections: controller.sections),
-                  _RecommendedList(items: controller.recommended),
-                ],
-              ),
-            ),
+          body: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final double viewportHeight = constraints.maxHeight.isFinite
+                  ? constraints.maxHeight
+                  : MediaQuery.sizeOf(context).height;
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _HeroBanner(
+                        images: _imgData,
+                        height: viewportHeight,
+                      ),
+                      _Header(controller: controller),
+                      const _StudyPath(),
+                      _SectionList(sections: controller.sections),
+                      _RecommendedList(items: controller.recommended),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         );
       },
@@ -63,8 +73,12 @@ class _WindowsMainPageState extends State<WindowsMainPage> {
 
 class _HeroBanner extends StatefulWidget {
   final List<ImageModel> images;
+  final double height;
 
-  const _HeroBanner({required this.images});
+  const _HeroBanner({
+    required this.images,
+    required this.height,
+  });
 
   @override
   State<_HeroBanner> createState() => _HeroBannerState();
@@ -176,11 +190,12 @@ class _HeroBannerState extends State<_HeroBanner> {
   Widget build(BuildContext context) {
     final List<ImageModel> safeImages = _safeImages;
     return SizedBox(
-      height: 340,
+      height: widget.height,
       width: double.infinity,
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
+          const ColoredBox(color: Colors.black),
           PageView.builder(
             controller: _pageController,
             itemCount: safeImages.length,
@@ -197,7 +212,7 @@ class _HeroBannerState extends State<_HeroBanner> {
                   if (item.image != null)
                     Image.network(
                       item.image!,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                       errorBuilder: (
                         BuildContext context,
                         Object error,
@@ -210,7 +225,7 @@ class _HeroBannerState extends State<_HeroBanner> {
                   if (item.fileImage != null)
                     Image.asset(
                       item.fileImage!,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                   DecoratedBox(
                     decoration: BoxDecoration(
@@ -295,7 +310,7 @@ class _FallbackBannerImage extends StatelessWidget {
         'images/001.jpeg';
     return Image.asset(
       fallback,
-      fit: BoxFit.cover,
+      fit: BoxFit.contain,
     );
   }
 }

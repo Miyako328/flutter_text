@@ -269,11 +269,6 @@ List<MainWidgetModel> page2 = <MainWidgetModel>[
     icon: const Icon(Icons.list_sharp),
   ),
   MainWidgetModel(
-    title: '组件能力库',
-    route: const ComponentLibraryPage(),
-    icon: const Icon(Icons.view_in_ar_outlined),
-  ),
-  MainWidgetModel(
     title: 'ImageCardPage',
     route: const ImageCardPage(),
     icon: const Icon(Icons.image_aspect_ratio_sharp),

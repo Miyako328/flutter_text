@@ -13,12 +13,12 @@ class GameListPage extends StatefulWidget {
 }
 
 class _GameListPageState extends State<GameListPage> {
-  List<PageModel> _page = [];
+  List<PageModel> _page = <PageModel>[];
 
   @override
   void initState() {
     super.initState();
-    _page = [
+    _page = <PageModel>[
       PageModel()
         ..name = '五子棋'
         ..pageUrl = const PaintExampleForth(),
@@ -28,9 +28,11 @@ class _GameListPageState extends State<GameListPage> {
       PageModel()
         ..name = '数独'
         ..pageUrl = SudoGamePage(),
+      PageModel()
+        ..name = '迷宫'
+        ..pageUrl = const MazeGamePage(),
     ];
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,10 @@ class _GameListPageState extends State<GameListPage> {
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0,
           ),
-          childrenDelegate: SliverChildBuilderDelegate((context, index) {
+          childrenDelegate: SliverChildBuilderDelegate((
+            BuildContext context,
+            int index,
+          ) {
             return GestureDetector(
               onTap: () {
                 WindowsNavigator().pushWidget(

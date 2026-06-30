@@ -26,7 +26,11 @@ class _ManagementPageState extends State<ManagementPage> {
   void initState() {
     super.initState();
     WindowsNavigator.init(editorController);
-    PostgresUser.init().then((void value) => _checkUser());
+    PostgresUser.init()
+        .then((void value) => _checkUser())
+        .catchError((Object err, StackTrace stackTrace) {
+      Log.error(err, stackTrace: stackTrace);
+    });
     Request.init();
     FileUtils();
     Log.init(isDebug: true);
