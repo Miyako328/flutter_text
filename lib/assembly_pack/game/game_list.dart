@@ -31,6 +31,9 @@ class _GameListPageState extends State<GameListPage> {
       PageModel()
         ..name = '迷宫'
         ..pageUrl = const MazeGamePage(),
+      PageModel()
+        ..name = '2048'
+        ..pageUrl = const Game2048Page(),
     ];
   }
 

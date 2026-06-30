@@ -4,6 +4,7 @@ import 'package:flutter_text/assembly_pack/desktop_list/desktop_notifier.dart';
 import 'package:flutter_text/assembly_pack/desktop_list/desktop_picker.dart';
 import 'package:flutter_text/assembly_pack/desktop_list/download.dart';
 import 'package:flutter_text/assembly_pack/desktop_list/keyborard_listener.dart';
+import 'package:flutter_text/assembly_pack/game_2048/game_2048.dart';
 import 'package:flutter_text/assembly_pack/management/utils/navigator.dart';
 import 'package:flutter_text/assembly_pack/maze/maze_game.dart';
 import 'package:flutter_text/assembly_pack/mine_sweep/game_main.dart';
@@ -198,6 +199,14 @@ class _ComponentLibraryPageState extends State<ComponentLibraryPage> {
         tags: <String>['Game', 'Grid'],
         icon: Icons.route_outlined,
         page: MazeGamePage(),
+        filter: ComponentLibraryFilter.unit,
+      ),
+      const _ComponentEntry(
+        title: '2048 Expectimax',
+        description: '2048 小游戏，支持 Expectimax 自动分析和可解释日志。',
+        tags: <String>['Game', 'AI', 'Expectimax'],
+        icon: Icons.grid_view_rounded,
+        page: Game2048Page(),
         filter: ComponentLibraryFilter.unit,
       ),
       _ComponentEntry(

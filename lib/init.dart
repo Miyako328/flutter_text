@@ -129,6 +129,7 @@ export 'package:self_utils/widget/drag_overlay.dart';
 export 'assembly_pack/text_style_test/text_style_test.dart';
 export 'assembly_pack/shell_test/shell_test.dart';
 export 'assembly_pack/game/main.dart';
+export 'assembly_pack/game_2048/game_2048.dart';
 export 'assembly_pack/webview/webview_test.dart';
 export 'package:self_utils/widget/scroll_listener_widget.dart';
 export 'assembly_pack/auto_play_list/auto_play.dart';
