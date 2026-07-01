@@ -22,7 +22,8 @@ class MainIndexPage extends StatelessWidget {
               actions: [
                 GestureDetector(
                   onTap: () {
-                    NavigatorUtils().pushWidget(context, const WindowsSearchPage());
+                    NavigatorUtils()
+                        .pushWidget(context, const WindowsSearchPage());
                   },
                   child: Container(
                     margin: const EdgeInsets.only(right: 10),
@@ -36,39 +37,31 @@ class MainIndexPage extends StatelessWidget {
                 controller: controller.tabController,
                 children: <Widget>[
                   RepaintBoundary(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              final MainWidgetModel mainModel =
-                              ArrayHelper.get(controller.page1, index)!;
-                              return ListTile(
-                                leading: mainModel.icon,
-                                title: Text(
-                                  '${mainModel.title}',
-                                  style: TextStyle(
-                                    fontSize: screenUtil.adaptive(40),
-                                  ),
-                                ),
-                                onTap: () {
-                                  if (mainModel.route != null) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) => mainModel.route!),
-                                    );
-                                  } else {
-                                    mainModel.onTapFunc?.call(context);
-                                  }
-                                },
+                    child: ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        final MainWidgetModel mainModel =
+                            ArrayHelper.get(controller.page1, index)!;
+                        return ListTile(
+                          leading: mainModel.icon,
+                          title: Text(
+                            '${mainModel.title}',
+                            style: TextStyle(
+                              fontSize: screenUtil.adaptive(40),
+                            ),
+                          ),
+                          onTap: () {
+                            if (mainModel.route != null) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => mainModel.route!),
                               );
-                            },
-                            itemCount: controller.page1.length,
-                          )
-                        ],
-                      ),
+                            } else {
+                              mainModel.onTapFunc?.call(context);
+                            }
+                          },
+                        );
+                      },
+                      itemCount: controller.page1.length,
                     ),
                   ),
                   RepaintBoundary(
@@ -77,7 +70,7 @@ class MainIndexPage extends StatelessWidget {
                         child: ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
                             final MainWidgetModel mainModel =
-                            ArrayHelper.get(controller.page2, index)!;
+                                ArrayHelper.get(controller.page2, index)!;
                             return ListTile(
                               leading: mainModel.icon,
                               title: Text(
@@ -92,7 +85,7 @@ class MainIndexPage extends StatelessWidget {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                        mainModel.route!),
+                                            mainModel.route!),
                                   );
                                 } else {
                                   mainModel.onTapFunc?.call(context);
@@ -112,7 +105,7 @@ class MainIndexPage extends StatelessWidget {
                     child: ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
                         final MainWidgetModel mainModel =
-                        ArrayHelper.get(controller.page3, index)!;
+                            ArrayHelper.get(controller.page3, index)!;
                         return ListTile(
                           leading: mainModel.icon,
                           title: Text(
@@ -127,7 +120,7 @@ class MainIndexPage extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                    mainModel.route!),
+                                        mainModel.route!),
                               );
                             } else {
                               mainModel.onTapFunc?.call(context);
@@ -143,7 +136,8 @@ class MainIndexPage extends StatelessWidget {
             ),
             bottomNavigationBar: BottomNavigationBar(
               items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(icon: Icon(Icons.contacts), label: '聊天室'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.contacts), label: '聊天室'),
                 BottomNavigationBarItem(icon: Icon(Icons.apps), label: '组件'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle), label: 'Api'),

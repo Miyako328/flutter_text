@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_text/assembly_pack/management/home_page/theme.dart';
 import 'package:flutter_text/init.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +16,7 @@ class WinCalendarPage extends StatefulWidget {
 
 class _WinCalendarPageState extends State<WinCalendarPage> {
   late final ValueNotifier<List<Event>> _selectedEvents;
+  StreamSubscription<void>? _themeSubscription;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -34,6 +33,8 @@ class _WinCalendarPageState extends State<WinCalendarPage> {
 
   @override
   void dispose() {
+    _themeSubscription?.cancel();
+    _selectedEvents.dispose();
     super.dispose();
   }
 
@@ -94,9 +95,12 @@ class _WinCalendarPageState extends State<WinCalendarPage> {
   }
 
   void _listenTheme() {
-    EventBusHelper.listen<EventBusM>((EventBusM event) {
+    _themeSubscription?.cancel();
+    _themeSubscription = EventBusHelper.listen<EventBusM>((EventBusM event) {
       if (event.theme != '') {
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       }
     });
   }
@@ -351,7 +355,8 @@ class _EventListChildState extends State<_EventListChild> {
                         child: Row(
                           children: [
                             Visibility(
-                              visible: event.type != EventType.expire.enumToString,
+                              visible:
+                                  event.type != EventType.expire.enumToString,
                               child: IconButton(
                                 onPressed: () {
                                   _height = 200;

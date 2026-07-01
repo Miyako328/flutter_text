@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:self_utils/utils/log_utils.dart';
 import 'package:self_utils/utils/toast_utils.dart';
 import 'package:self_utils/widget/api_call_back.dart';
 import 'package:self_utils/widget/video_widget.dart';
@@ -17,6 +16,8 @@ class VideoCompressPage extends StatefulWidget {
 class _VideoCompressState extends State<VideoCompressPage> {
   File? _file;
   File? _videoFile;
+  String _fileSize = '0 KB';
+  String _videoFileSize = '0 KB';
 
   @override
   void initState() {
@@ -29,14 +30,22 @@ class _VideoCompressState extends State<VideoCompressPage> {
       type: FileType.video,
     );
     if (result != null && result.files.isNotEmpty) {
+      final File file = File(result.files.first.path!);
+      final String fileSize = await _formatFileSize(file);
       setState(() {
-        _file = File(result.files.first.path!);
+        _file = file;
+        _fileSize = fileSize;
+        _videoFile = null;
+        _videoFileSize = '0 KB';
       });
     }
   }
 
   //压缩
   void _compress() async {
+    if (_file == null) {
+      return;
+    }
     final MediaInfo? result = await loadingCallback(
       () => VideoCompress.compressVideo(
         _file!.path,
@@ -45,19 +54,30 @@ class _VideoCompressState extends State<VideoCompressPage> {
     );
 
     if (result != null) {
+      final File file = result.file!;
+      final String videoFileSize = await _formatFileSize(file);
       setState(() {
-        _videoFile = result.file!;
+        _videoFile = file;
+        _videoFileSize = videoFileSize;
       });
     }
   }
 
   void saveToLocal() async {
+    if (_videoFile == null) {
+      return;
+    }
     try {
       await ImageGallerySaver.saveFile(_videoFile!.path);
       ToastUtils.showToast(msg: '文件已保存到$_videoFile');
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<String> _formatFileSize(File file) async {
+    final int bytes = await file.length();
+    return '${(bytes / 1024).toStringAsFixed(2)} KB';
   }
 
   @override
@@ -85,8 +105,7 @@ class _VideoCompressState extends State<VideoCompressPage> {
                         ),
                       ),
                     const SizedBox(height: 10),
-                    Text(
-                        '视频大小：${_file != null ? (_file!.readAsBytesSync().lengthInBytes / 1024).toStringAsFixed(2) : 0} KB')
+                    Text('视频大小：$_fileSize')
                   ],
                 ),
               ),
@@ -138,8 +157,7 @@ class _VideoCompressState extends State<VideoCompressPage> {
                         ),
                       ),
                     const SizedBox(height: 10),
-                    Text(
-                        '压缩后视频大小：${_videoFile != null ? (_videoFile!.readAsBytesSync().lengthInBytes / 1024).toStringAsFixed(2) : 0} KB')
+                    Text('压缩后视频大小：$_videoFileSize')
                   ],
                 ),
               ),

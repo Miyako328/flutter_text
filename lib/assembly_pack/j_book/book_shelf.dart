@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:epubx/epubx.dart' as epub;
 import 'package:file_picker/file_picker.dart';
@@ -58,9 +57,12 @@ class BookShelfController extends GetxController {
       final List<File> locateFile = await BookHelper.setAppLocateFile(files);
       final List<BookModel> newBooks = <BookModel>[];
       for (int i = 0; i < locateFile.length; i++) {
-        final Uint8List? unit8 =
-            ArrayHelper.get(locateFile, i)?.readAsBytesSync();
-        final epub.EpubBook epubBook = await epub.EpubReader.readBook(unit8!);
+        final File? file = ArrayHelper.get(locateFile, i);
+        if (file == null) {
+          continue;
+        }
+        final epub.EpubBook epubBook =
+            await epub.EpubReader.readBook(file.readAsBytes());
         final String image = await BookHelper.getCoverImageWithFile(
             epubBook.Content?.Images?.values.first.Content);
         final BookModel model = BookModel()
@@ -68,7 +70,7 @@ class BookShelfController extends GetxController {
           ..coverImage = image
           ..title = epubBook.Title
           ..updateTime = DateTimeHelper.getLocalTimeStamp()
-          ..bookPath = ArrayHelper.get(locateFile, i)?.path
+          ..bookPath = file.path
           ..index = 0;
         BookCache.setCache(model);
         newBooks.add(model);

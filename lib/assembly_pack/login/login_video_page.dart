@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -18,17 +16,20 @@ class LoginVideoPageState extends State<LoginVideoPage> {
     _controller = VideoPlayerController.network(
         'https://storage.googleapis.com/coverr-main/mp4%2FBlue%20Joy.mp4')
       ..initialize().then((_) {
+        if (!mounted) {
+          return;
+        }
         setState(() {});
         _controller.play();
         _controller.setLooping(true);
-        Timer.periodic(const Duration(seconds: 60), (Timer time) {});
       });
   }
 
+  @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     _controller.pause();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -108,7 +109,7 @@ class LoginVideoPageState extends State<LoginVideoPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const <Widget>[
-               Text(
+              Text(
                 "登录",
                 style: TextStyle(
                     fontSize: 40.0,

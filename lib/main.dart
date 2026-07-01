@@ -55,6 +55,7 @@ class Assembly extends StatefulWidget {
 
 class AssemblyState extends State<Assembly> {
   bool? todayShowAd;
+  StreamSubscription<void>? _themeSubscription;
 
   List<ShortCutsModel> list = <ShortCutsModel>[
     ShortCutsModel(
@@ -113,11 +114,20 @@ class AssemblyState extends State<Assembly> {
   }
 
   void _listenTheme() {
-    EventBusHelper.listen<EventBusM>((EventBusM event) {
+    _themeSubscription?.cancel();
+    _themeSubscription = EventBusHelper.listen<EventBusM>((EventBusM event) {
       if (event.theme != '') {
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _themeSubscription?.cancel();
+    super.dispose();
   }
 
   @override

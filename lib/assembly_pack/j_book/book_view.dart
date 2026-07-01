@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +28,8 @@ class _BookViewState extends State<BookView> {
   @override
   void initState() {
     super.initState();
-    final Uint8List bytes = File(widget.book.bookPath!).readAsBytesSync();
     _epubController = EpubController(
-      document: EpubReader.readBook(bytes),
+      document: EpubReader.readBook(File(widget.book.bookPath!).readAsBytes()),
     );
     Future<void>.delayed(const Duration(milliseconds: 200)).then(
       (_) => setIndex(),

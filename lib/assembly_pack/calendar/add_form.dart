@@ -10,7 +10,8 @@ class AddFormWidget extends StatefulWidget {
   DateTime time;
   void Function() refresh;
 
-  AddFormWidget({Key? key, required this.time, required this.refresh}) : super(key: key);
+  AddFormWidget({Key? key, required this.time, required this.refresh})
+      : super(key: key);
 
   @override
   State<AddFormWidget> createState() => _AddFormWidgetState();
@@ -18,6 +19,7 @@ class AddFormWidget extends StatefulWidget {
 
 class _AddFormWidgetState extends State<AddFormWidget> {
   GlobalKey<FormState> key = GlobalKey<FormState>();
+  StreamSubscription<void>? _themeSubscription;
   bool isAdd = false;
   double _height = 50;
 
@@ -40,13 +42,20 @@ class _AddFormWidgetState extends State<AddFormWidget> {
   }
 
   void _listenTheme() {
-    EventBusHelper.listen<EventBusM>((EventBusM event) {
+    _themeSubscription?.cancel();
+    _themeSubscription = EventBusHelper.listen<EventBusM>((EventBusM event) {
       if (event.theme != '') {
-        if (!mounted) {
+        if (mounted) {
           setState(() {});
         }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _themeSubscription?.cancel();
+    super.dispose();
   }
 
   void _onSave() {
@@ -65,7 +74,7 @@ class _AddFormWidgetState extends State<AddFormWidget> {
         widget.refresh.call();
         _refresh();
         Log.info(jsonEncode(event));
-      } catch(err) {
+      } catch (err) {
         rethrow;
       }
     }
@@ -87,10 +96,9 @@ class _AddFormWidgetState extends State<AddFormWidget> {
         margin: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
           border: Border.all(
-            color: (GlobalStore.theme == 'light'
-                ? HomeTheme.lightBorderLineColor
-                : HomeTheme.darkBorderLineColor)
-          ),
+              color: (GlobalStore.theme == 'light'
+                  ? HomeTheme.lightBorderLineColor
+                  : HomeTheme.darkBorderLineColor)),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: isAdd

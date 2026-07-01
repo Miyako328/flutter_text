@@ -12,6 +12,8 @@ class ImageCompressPage extends StatefulWidget {
 class _ImageCompressState extends State<ImageCompressPage> {
   File? _file;
   File? _compressImage;
+  String _fileSize = '0 KB';
+  String _compressImageSize = '0 KB';
 
   int? width;
   int? height;
@@ -23,7 +25,9 @@ class _ImageCompressState extends State<ImageCompressPage> {
     final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery, maxWidth: 1024.0, maxHeight: 1024.0);
     if (image != null) {
-      final Image pimage = Image.file(File(image.path));
+      final File imageFile = File(image.path);
+      final String fileSize = await _formatFileSize(imageFile);
+      final Image pimage = Image.file(imageFile);
 
       //获取图片file格式的长宽
       pimage.image
@@ -38,12 +42,12 @@ class _ImageCompressState extends State<ImageCompressPage> {
       }));
 
       //没有选择图片或者没有拍照
-      if (image != null) {
-        setState(() {
-          _file = File(image.path);
-          _compressImage = null;
-        });
-      }
+      setState(() {
+        _file = imageFile;
+        _fileSize = fileSize;
+        _compressImage = null;
+        _compressImageSize = '0 KB';
+      });
     }
   }
 
@@ -51,13 +55,21 @@ class _ImageCompressState extends State<ImageCompressPage> {
     if (_file == null) {
       return;
     }
-    final File? result = await ImageCompressUtil.imageCompressAndGetFile(_file!);
+    final File? result =
+        await ImageCompressUtil.imageCompressAndGetFile(_file!);
 
     if (result != null) {
+      final String compressImageSize = await _formatFileSize(result);
       setState(() {
         _compressImage = result;
+        _compressImageSize = compressImageSize;
       });
     }
+  }
+
+  Future<String> _formatFileSize(File file) async {
+    final int bytes = await file.length();
+    return '${(bytes / 1024).toStringAsFixed(2)} KB';
   }
 
   @override
@@ -85,8 +97,7 @@ class _ImageCompressState extends State<ImageCompressPage> {
                       ),
                     const SizedBox(height: 10),
                     Text('图片尺寸：width ${width ?? 0} height ${height ?? 0}'),
-                    Text(
-                        '图片大小：${_file != null ? ((_file?.readAsBytesSync().lengthInBytes ?? 0) / 1024).toStringAsFixed(2) : 0} KB')
+                    Text('图片大小：$_fileSize')
                   ],
                 ),
               ),
@@ -129,8 +140,7 @@ class _ImageCompressState extends State<ImageCompressPage> {
                         ),
                       ),
                     const SizedBox(height: 10),
-                    Text(
-                        '压缩后图片大小：${_compressImage != null ? ((_compressImage?.readAsBytesSync().lengthInBytes ?? 0) / 1024).toStringAsFixed(2) : 0} KB')
+                    Text('压缩后图片大小：$_compressImageSize')
                   ],
                 ),
               ),

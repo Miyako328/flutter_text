@@ -1,12 +1,9 @@
-import 'dart:typed_data';
-
 import 'package:cross_file/cross_file.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter_text/init.dart';
 import 'package:image_compression/image_compression.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart' as path;
-import 'package:self_utils/utils/compress.dart';
 import 'package:shell/shell.dart';
 
 class DesktopDropText extends StatefulWidget {
@@ -18,9 +15,11 @@ class DesktopDropText extends StatefulWidget {
 
 class _DesktopDropTextState extends State<DesktopDropText> {
   XFile? _file;
+  String _fileSize = '0 MB';
 
   void _dragDone(DropDoneDetails details) async {
     _file = details.files.last;
+    _fileSize = await _formatFileSize(_file!);
     Log.info('_file.path: ${_file?.path}');
     Log.info('_file.name: ${_file?.name}');
     Log.info('_file.mimeType: ${_file?.mimeType}');
@@ -30,9 +29,11 @@ class _DesktopDropTextState extends State<DesktopDropText> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GlobalStore.isMobile ? AppBar(
-        title: const Text('拖拽进程序'),
-      ) : null,
+      appBar: GlobalStore.isMobile
+          ? AppBar(
+              title: const Text('拖拽进程序'),
+            )
+          : null,
       body: DropTarget(
         onDragDone: _dragDone,
         child: _file == null ? _upload() : _view(_file!),
@@ -58,8 +59,7 @@ class _DesktopDropTextState extends State<DesktopDropText> {
             child: Image.file(f),
           ),
           Container(
-            child: Text(
-                '图片大小：${(f.readAsBytesSync().lengthInBytes / 1024 / 1024).toStringAsFixed(2)}MB'),
+            child: Text('图片大小：$_fileSize'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -79,21 +79,24 @@ class _DesktopDropTextState extends State<DesktopDropText> {
     }
     final File f = File(_file!.path);
     final ImageFile input =
-        ImageFile(rawBytes: f.readAsBytesSync(), filePath: f.path);
+        ImageFile(rawBytes: await f.readAsBytes(), filePath: f.path);
     final ImageFile result =
         await compressInQueue(ImageFileConfiguration(input: input));
 
-    if (result != null) {
-      final Directory dir = await path_provider.getTemporaryDirectory();
-      final String filePath = path.join(dir.path, '${_file!.name}');
-      Log.info(filePath);
-      final File file = File(filePath);
-      if (!file.existsSync()) {
-        file.createSync();
-      }
-      await file.writeAsBytes(result.rawBytes).whenComplete(
-            () => shell.start('open ${dir.path}'),
-          );
+    final Directory dir = await path_provider.getTemporaryDirectory();
+    final String filePath = path.join(dir.path, '${_file!.name}');
+    Log.info(filePath);
+    final File file = File(filePath);
+    if (!file.existsSync()) {
+      file.createSync();
     }
+    await file.writeAsBytes(result.rawBytes).whenComplete(
+          () => shell.start('open ${dir.path}'),
+        );
+  }
+
+  Future<String> _formatFileSize(XFile file) async {
+    final int bytes = await file.length();
+    return '${(bytes / 1024 / 1024).toStringAsFixed(2)}MB';
   }
 }

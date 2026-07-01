@@ -8,7 +8,7 @@ class BookHelper {
   static Future<List<File>> setAppLocateFile(List<File> files) async {
     final List<File> news = <File>[];
     for (int i = 0; i < files.length; i++) {
-      final Uint8List? unit8 = ArrayHelper.get(files, i)?.readAsBytesSync();
+      final Uint8List? unit8 = await ArrayHelper.get(files, i)?.readAsBytes();
       final File tempFile =
           await FileUtils.generateRandomTempFile(fileType: 'epub');
       final File newFile = await tempFile.writeAsBytes(unit8!);
