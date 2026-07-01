@@ -1,0 +1,17 @@
+{
+    "@@locale": "zh",
+    "appName": "Flutter测试应用",
+    "langSetting": "语言设置",
+    "mineSweeping": "扫雷游戏",
+    "winTitle": "恭喜!!",
+    "winText": "游戏胜利，用时为 ",
+    "playAgain": "再玩一次",
+    "settingTitle": "游戏设置!",
+    "themeColor": "主题设置",
+    "gamePlay": "游戏难度",
+    "easy": "简易",
+    "normal": "正常",
+    "hard": "困难",
+    "gameOverTitle": "喔不!",
+    "gameOverText": "游戏失败！"
+}

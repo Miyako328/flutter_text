@@ -1,0 +1,17 @@
+{
+    "@@locale": "en",
+    "appName": "Flutter Utils",
+    "langSetting": "lang setting",
+    "mineSweeping": "Mine Sweeping Game!",
+    "winTitle": "Congratulation!!",
+    "winText": "You win!Time is ",
+    "playAgain": "Play Again",
+    "settingTitle": "Game Setting!",
+    "themeColor": "Choose Theme Color",
+    "gamePlay": "Game Difficulty",
+    "easy": "easy",
+    "normal": "normal",
+    "hard": "hard",
+    "gameOverTitle": "O!",
+    "gameOverText": "You lose!But Dont Mind,Try again will better"
+}

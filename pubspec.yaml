@@ -65,8 +65,6 @@ dependencies:
   window_manager: ^0.3.0 #有关窗口设置的包
   shell: ^2.0.0 #调用命令行
   redis: ^3.1.0 #redis
-  json_serializable: ^6.2.0 #json格式化
-  build_runner: ^2.1.10 #json格式化配套
   flame: ^1.2.0 #游戏引擎
   webview_flutter: ^3.0.4 #webview
   flutter_riverpod: ^1.0.4 #river
@@ -94,7 +92,7 @@ dependencies:
 
     #  本地
   self_utils:
-    path: /Users/lixuan/Documents/work/self_utils
+    path: ./packages/self_utils
   epubx:
     path: ./packages/epubx
   epub_view:
@@ -102,12 +100,19 @@ dependencies:
   webview_cef:
     path: /Users/lixuan/Documents/work/webview_cef
   json_annotation: ^4.9.0
+  dio: ^5.8.0
+  retrofit: ^4.6.0
 
+# dart run build_runner build 生成json模型
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_gen_runner: ^5.10.0
+  retrofit_generator: ^9.6.0
+  build_runner: ^2.4.15
+  json_serializable: ^6.9.5
 
+#fluttergen -c pubspec.yaml    # 生成代码
 flutter_gen:
   output: lib/gen/
   assets:
