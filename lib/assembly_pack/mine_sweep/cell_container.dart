@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_text/gen/assets.gen.dart';
 import 'package:flutter_text/init.dart';
 
 import 'setting.dart';
@@ -35,9 +36,7 @@ class CellContainer extends StatelessWidget {
         child: Text(
           "${value != 0 ? value : ''}",
           style: TextStyle(
-            fontSize: screenUtil.getAutoSp(30),
-            color: Colors.white
-          ),
+              fontSize: screenUtil.getAutoSp(30), color: Colors.white),
         ),
       );
     } else if (blockType == BlockType.mine) {
@@ -50,7 +49,7 @@ class CellContainer extends StatelessWidget {
               : gameSetting.c_A0BBFF[1],
           borderRadius: const BorderRadius.all(Radius.circular(2)),
         ),
-        child: Image.asset("assets/images/bomb.png"),
+        child: Assets.imagesBomb.image(),
       );
     } else if (blockType == BlockType.label) {
       container = Container(
@@ -62,7 +61,7 @@ class CellContainer extends StatelessWidget {
               : gameSetting.c_A0BBFF[2],
           borderRadius: const BorderRadius.all(Radius.circular(2)),
         ),
-        child: Image.asset("assets/images/flag.png"),
+        child: Assets.imagesFlag.image(),
       );
     } else {
       container = Container(

@@ -1,11 +1,8 @@
-
 import 'package:flutter/material.dart';
 
 class LayoutDemo extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Drawer抽屉组件示例'),
@@ -19,21 +16,18 @@ class LayoutDemo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    child: Text('属性', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                    child: Text(
+                      '属性',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   Container(
-                    child: Text('说明', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: Text('Drawer', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),),
+                    child: Text(
+                      '说明',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
               ),
@@ -44,24 +38,13 @@ class LayoutDemo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    child: Text('elevation', style: TextStyle(fontSize: 20),),
-                  ),
-                  Container(
-                    child: Text('背景高度', style: TextStyle(fontSize: 20),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: Text('child', style: TextStyle(fontSize: 20),),
-                  ),
-                  Container(
-                    child: Text('子组件', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      'Drawer',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red),
+                    ),
                   ),
                 ],
               ),
@@ -72,10 +55,56 @@ class LayoutDemo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    child: Text('semanticlabel', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      'elevation',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                   Container(
-                    child: Text('标签', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      '背景高度',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      'child',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      '子组件',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      'semanticlabel',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      '标签',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ],
               ),
@@ -86,7 +115,13 @@ class LayoutDemo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    child: Text('UserAccountDrawerHeader', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),),
+                    child: Text(
+                      'UserAccountDrawerHeader',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red),
+                    ),
                   ),
                 ],
               ),
@@ -97,24 +132,16 @@ class LayoutDemo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    child: Text('decoration', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      'decoration',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                   Container(
-                    child: Text('头部装饰', style: TextStyle(fontSize: 20),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: Text('margin', style: TextStyle(fontSize: 20),),
-                  ),
-                  Container(
-                    child: Text('外边距', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      '头部装饰',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ],
               ),
@@ -125,24 +152,16 @@ class LayoutDemo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    child: Text('currentAccountPicture', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      'margin',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                   Container(
-                    child: Text('主图像', style: TextStyle(fontSize: 20),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: Text('otherAccountPictures', style: TextStyle(fontSize: 20),),
-                  ),
-                  Container(
-                    child: Text('副图像', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      '外边距',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ],
               ),
@@ -153,24 +172,16 @@ class LayoutDemo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    child: Text('accountName', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      'currentAccountPicture',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                   Container(
-                    child: Text('标题', style: TextStyle(fontSize: 20),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: Text('accountEmail', style: TextStyle(fontSize: 20),),
-                  ),
-                  Container(
-                    child: Text('副标题', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      '主图像',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ],
               ),
@@ -181,10 +192,76 @@ class LayoutDemo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    child: Text('onDetailsPressed', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      'otherAccountPictures',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                   Container(
-                    child: Text('点击监听', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      '副图像',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      'accountName',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      '标题',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      'accountEmail',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      '副标题',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      'onDetailsPressed',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      '点击监听',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ],
               ),
@@ -205,18 +282,18 @@ class LayoutDemo extends StatelessWidget {
               ),
               //设置当前用户头像
               currentAccountPicture: new CircleAvatar(
-                backgroundImage: new AssetImage("images/1.jpeg"),
+                backgroundImage: new AssetImage("assets/images/1.jpeg"),
               ),
               onDetailsPressed: () {},
               //属性本来是用来设置当前用户的其他账号的头像 这里用来当QQ二维码图片展示
               otherAccountsPictures: [
                 new Container(
-                  child: Image.asset('images/code.jpeg'),
+                  child: Image.asset('assets/images/code.jpeg'),
                 ),
               ],
             ),
             ListTile(
-              leading: new CircleAvatar(child: Icon(Icons.color_lens)),//导航栏菜单
+              leading: new CircleAvatar(child: Icon(Icons.color_lens)), //导航栏菜单
               title: Text('个性装扮'),
             ),
             ListTile(
@@ -231,6 +308,5 @@ class LayoutDemo extends StatelessWidget {
         ),
       ),
     );
-
   }
 }

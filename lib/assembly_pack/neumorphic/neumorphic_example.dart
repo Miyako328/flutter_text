@@ -124,7 +124,7 @@ class _pageState extends State<_page> {
           height: 200,
           width: 200,
           child: Image.asset(
-            'images/timg3.jpg',
+            'assets/images/timg3.jpg',
             fit: BoxFit.cover,
           )),
     );

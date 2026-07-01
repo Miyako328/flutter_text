@@ -21,9 +21,9 @@ class WindowsMainPage extends StatefulWidget {
 
 class _WindowsMainPageState extends State<WindowsMainPage> {
   final List<ImageModel> _imgData = <ImageModel>[
-    ImageModel()..fileImage = 'images/001.jpeg',
-    ImageModel()..fileImage = 'images/002.jpg',
-    ImageModel()..fileImage = 'images/003.png',
+    ImageModel()..fileImage = 'assets/images/001.jpeg',
+    ImageModel()..fileImage = 'assets/images/002.jpg',
+    ImageModel()..fileImage = 'assets/images/003.png',
   ];
 
   @override
@@ -97,7 +97,7 @@ class _HeroBannerState extends State<_HeroBanner> {
       return _remoteImages;
     }
     return widget.images.isEmpty
-        ? <ImageModel>[ImageModel()..fileImage = 'images/001.jpeg']
+        ? <ImageModel>[ImageModel()..fileImage = 'assets/images/001.jpeg']
         : widget.images;
   }
 
@@ -304,10 +304,10 @@ class _FallbackBannerImage extends StatelessWidget {
     final String fallback = images
             .firstWhere(
               (ImageModel image) => image.fileImage != null,
-              orElse: () => ImageModel()..fileImage = 'images/001.jpeg',
+              orElse: () => ImageModel()..fileImage = 'assets/images/001.jpeg',
             )
             .fileImage ??
-        'images/001.jpeg';
+        'assets/images/001.jpeg';
     return Image.asset(
       fallback,
       fit: BoxFit.contain,

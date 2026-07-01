@@ -8,7 +8,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
-class   TextT extends StatefulWidget {
+class TextT extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -47,10 +47,12 @@ class _MyAppState extends State<TextT> {
                         onSubmitted: (value) => _generateBarCode(value),
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.text_fields),
-                          helperText: 'Please input your code to generage qrcode image.',
+                          helperText:
+                              'Please input your code to generage qrcode image.',
                           hintText: 'Please Input Your Code',
                           hintStyle: TextStyle(fontSize: 15),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 7, vertical: 15),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 7, vertical: 15),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -60,10 +62,13 @@ class _MyAppState extends State<TextT> {
                         maxLines: 2,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.wrap_text),
-                          helperText: 'The barcode or qrcode you scan will be displayed in this area.',
-                          hintText: 'The barcode or qrcode you scan will be displayed in this area.',
+                          helperText:
+                              'The barcode or qrcode you scan will be displayed in this area.',
+                          hintText:
+                              'The barcode or qrcode you scan will be displayed in this area.',
                           hintStyle: TextStyle(fontSize: 15),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 7, vertical: 15),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 7, vertical: 15),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -105,19 +110,22 @@ class _MyAppState extends State<TextT> {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 9),
               decoration: BoxDecoration(
                 color: Colors.black12,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(4), topRight: Radius.circular(4)),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 40, right: 40, top: 30, bottom: 10),
+              padding:
+                  EdgeInsets.only(left: 40, right: 40, top: 30, bottom: 10),
               child: Column(
                 children: <Widget>[
                   SizedBox(
                     height: 190,
                     child: bytes.isEmpty
                         ? Center(
-                      child: Text('Empty code ... ', style: TextStyle(color: Colors.black38)),
-                    )
+                            child: Text('Empty code ... ',
+                                style: TextStyle(color: Colors.black38)),
+                          )
                         : Image.memory(bytes),
                   ),
                   Padding(
@@ -130,29 +138,39 @@ class _MyAppState extends State<TextT> {
                           child: GestureDetector(
                             child: Text(
                               'remove',
-                              style: TextStyle(fontSize: 15, color: Colors.blue),
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.blue),
                               textAlign: TextAlign.left,
                             ),
-                            onTap: () => this.setState(() => this.bytes = Uint8List(0)),
+                            onTap: () =>
+                                this.setState(() => this.bytes = Uint8List(0)),
                           ),
                         ),
-                        Text('|', style: TextStyle(fontSize: 15, color: Colors.black26)),
+                        Text('|',
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.black26)),
                         Expanded(
                           flex: 5,
                           child: GestureDetector(
                             onTap: () async {
-                              final success = await ImageGallerySaver.saveImage(this.bytes);
+                              final success =
+                                  await ImageGallerySaver.saveImage(this.bytes);
                               SnackBar snackBar;
                               if (success) {
-                                snackBar = new SnackBar(content: new Text('Successful Preservation!'));
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                snackBar = new SnackBar(
+                                    content:
+                                        new Text('Successful Preservation!'));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               } else {
-                                snackBar = new SnackBar(content: new Text('Save failed!'));
+                                snackBar = new SnackBar(
+                                    content: new Text('Save failed!'));
                               }
                             },
                             child: Text(
                               'save',
-                              style: TextStyle(fontSize: 15, color: Colors.blue),
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.blue),
                               textAlign: TextAlign.right,
                             ),
                           ),
@@ -168,7 +186,8 @@ class _MyAppState extends State<TextT> {
               child: Row(
                 children: <Widget>[
                   Icon(Icons.history, size: 16, color: Colors.black38),
-                  Text('  Generate History', style: TextStyle(fontSize: 14, color: Colors.black38)),
+                  Text('  Generate History',
+                      style: TextStyle(fontSize: 14, color: Colors.black38)),
                   Spacer(),
                   Icon(Icons.chevron_right, size: 16, color: Colors.black38),
                 ],
@@ -195,7 +214,7 @@ class _MyAppState extends State<TextT> {
                   children: <Widget>[
                     Expanded(
                       flex: 2,
-                      child: Image.asset('images/generate_qrcode.png'),
+                      child: Image.asset('assets/images/generate_qrcode.png'),
                     ),
                     Divider(height: 20),
                     Expanded(flex: 1, child: Text("Generate")),
@@ -216,7 +235,7 @@ class _MyAppState extends State<TextT> {
                   children: <Widget>[
                     Expanded(
                       flex: 2,
-                      child: Image.asset('images/scanner.png'),
+                      child: Image.asset('assets/images/scanner.png'),
                     ),
                     Divider(height: 20),
                     Expanded(flex: 1, child: Text("Scan")),
@@ -237,7 +256,7 @@ class _MyAppState extends State<TextT> {
                   children: <Widget>[
                     Expanded(
                       flex: 2,
-                      child: Image.asset('images/albums.png'),
+                      child: Image.asset('assets/images/albums.png'),
                     ),
                     Divider(height: 20),
                     Expanded(flex: 1, child: Text("Scan Photo")),
@@ -253,7 +272,7 @@ class _MyAppState extends State<TextT> {
 
   Future<void> _scan() async {
     final String? barcode = await scanner.scan();
-    _outputController.text = barcode??'';
+    _outputController.text = barcode ?? '';
   }
 
   Future<void> _scanPhoto() async {
@@ -269,7 +288,7 @@ class _MyAppState extends State<TextT> {
   Future _scanBytes() async {
     final XFile? file = await _picker.pickImage(source: ImageSource.camera);
     if (file != null) {
-      Uint8List bytes = File(file.path).readAsBytesSync();
+      Uint8List bytes = await File(file.path).readAsBytes();
       String barcode = await scanner.scanBytes(bytes);
       _outputController.text = barcode;
     }

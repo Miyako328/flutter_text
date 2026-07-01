@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_text/init.dart';
 import 'package:flutter_text/widget/chat/helper/message/message_center.dart';
 import 'package:flutter_text/widget/chat/helper/message/message_model.dart';
 import 'package:flutter_text/widget/chat/helper/user/user.dart';
 import 'package:flutter_text/widget/chat/helper/user/user_cache.dart';
-import 'package:flutter_text/widget/notification_center/notification_listener.dart';
-import 'package:flutter_text/widget/notification_center/notification_model.dart';
 
 import 'package:self_utils/widget/image_zoomable.dart';
 
@@ -28,6 +27,7 @@ class _ChatInfoState extends State<ChatInfoPage>
       TextEditingController(); //输入框
   bool isComposer = false; //输入框判断
   final FocusNode _node = FocusNode();
+  final FocusNode _keyboardNode = FocusNode();
 
   StreamController<List<MessageModel>> controller =
       StreamController<List<MessageModel>>();
@@ -37,16 +37,23 @@ class _ChatInfoState extends State<ChatInfoPage>
     super.initState();
     getTopicMsg((List<MessageModel> list) {
       msgs = list;
-      controller.sink.add(msgs);
+      if (!controller.isClosed) {
+        controller.sink.add(msgs);
+      }
       onScrollBottom();
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
     listener((MessageModel msg) {
-      if (msg.id == GlobalStore.user?.id && msgs.any((item) => item.keyId == msg.keyId)) {
+      if (msg.id == GlobalStore.user?.id &&
+          msgs.any((item) => item.keyId == msg.keyId)) {
         return;
       } else {
         msgs.add(msg);
-        controller.sink.add(msgs);
+        if (!controller.isClosed) {
+          controller.sink.add(msgs);
+        }
         onScrollBottom();
       }
       if (mounted) {
@@ -72,8 +79,12 @@ class _ChatInfoState extends State<ChatInfoPage>
 
   @override
   void dispose() {
-    super.dispose();
+    _scrollController.dispose();
+    _textEditingController.dispose();
+    _node.dispose();
+    _keyboardNode.dispose();
     controller.close();
+    super.dispose();
   }
 
   @override
@@ -93,15 +104,16 @@ class _ChatInfoState extends State<ChatInfoPage>
                       onTap: () {
                         FocusScope.of(context).requestFocus(FocusNode());
                       },
-                      child: ListView(
+                      child: ListView.builder(
                         controller: _scrollController,
-                        shrinkWrap: true,
-                        children: (snapshot.data as List<MessageModel>)
-                            .map((MessageModel e) {
+                        itemCount: (snapshot.data as List<MessageModel>).length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final MessageModel e =
+                              (snapshot.data as List<MessageModel>)[index];
                           return ChatMessage(
                             msg: e,
                           );
-                        }).toList(),
+                        },
                       ),
                     ),
                   ),
@@ -119,10 +131,12 @@ class _ChatInfoState extends State<ChatInfoPage>
 
   //底部组件
   Widget _buildTextComposer() {
-    return RawKeyboardListener(
-      focusNode: FocusNode(),
-      onKey: (RawKeyEvent event) {
-        if (event.logicalKey.keyLabel == 'Enter' && isComposer == true) {
+    return KeyboardListener(
+      focusNode: _keyboardNode,
+      onKeyEvent: (KeyEvent event) {
+        if (event is KeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.enter &&
+            isComposer == true) {
           _handleSubmitted(_textEditingController.text);
         }
       },

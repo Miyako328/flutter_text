@@ -182,15 +182,16 @@ class _DropSelectableWidgetState extends State<DropSelectableWidget>
     return Material(
       child: InkWell(
         onTap: () {
-          if (widget.data.indexOf(widget.value??'') != index) widget.onDropSelected?.call(index);
+          if (widget.data.indexOf(widget.value ?? '') != index)
+            widget.onDropSelected?.call(index);
           _selectedIndex = index;
           _overlayEntry?.markNeedsBuild();
           _node.unfocus();
         },
         child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             color: index == _selectedIndex
-                ? Colors.blue.withOpacity(0.2)
+                ? Colors.blue.withValues(alpha: 0.2)
                 : Colors.transparent,
             child: Text(
               '${widget.data[index]}',

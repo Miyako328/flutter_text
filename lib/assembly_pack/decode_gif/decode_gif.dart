@@ -33,10 +33,13 @@ class _DecodeGifState extends State<DecodeGifPage>
       if (!mounted) return;
 
       _controller = AnimationController(
-          vsync: this, duration: Duration(milliseconds: (res.frameCount??1) * (res.duration??1)));
-      _animation = IntTween(begin: 0, end:(res.frameCount??1)).animate(_controller);
+          vsync: this,
+          duration: Duration(
+              milliseconds: (res.frameCount ?? 1) * (res.duration ?? 1)));
+      _animation =
+          IntTween(begin: 0, end: (res.frameCount ?? 1)).animate(_controller);
 
-      _gifFrames = res.value??[];
+      _gifFrames = res.value ?? [];
       setState(() {
         _controller.repeat();
       });
@@ -51,7 +54,7 @@ class _DecodeGifState extends State<DecodeGifPage>
 
   //获取gif图的帧数
   Future<GifModel> _getDecodeGif() async {
-    final ByteData data = await rootBundle.load('images/test.gif');
+    final ByteData data = await rootBundle.load('assets/images/test.gif');
     final Uint8List uintList = Uint8List.view(data.buffer);
     final ui.Codec code = await ui.instantiateImageCodec(uintList);
     Log.info(code.frameCount);

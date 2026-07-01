@@ -30,9 +30,8 @@ class _SplashState extends State<SplashPage> {
       true,
       const Duration(days: 1),
     );
-    NavigatorUtils().pushWidget(context, GlobalStore.isMobile
-        ? MainIndexPage()
-        : ManagementPage(),
+    NavigatorUtils().pushWidget(
+        context, GlobalStore.isMobile ? MainIndexPage() : ManagementPage(),
         replaceRoot: true, type: AnimateType.Fade);
   }
 
@@ -52,7 +51,7 @@ class _SplashState extends State<SplashPage> {
             height: double.infinity,
             child: Center(
               child: Image.asset(
-                'images/plane2.gif',
+                'assets/images/plane2.gif',
                 width: 60,
               ),
             ),

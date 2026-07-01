@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_text/gen/assets.gen.dart';
 
 class GridViewPage extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'slider Study',
       home: Scaffold(
@@ -17,10 +18,9 @@ class GridViewPage extends StatelessWidget {
   }
 }
 
-class _contextPage extends StatefulWidget  {
+class _contextPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _contextPageState();
-
 }
 
 class _contextPageState extends State<_contextPage> {
@@ -35,19 +35,14 @@ class _contextPageState extends State<_contextPage> {
   //SliverGridDelegateWithMaxCrossAxisExtent根据每个宽度自动计算的Grid
   Widget _buildGridCustom() {
     return GridView.custom(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 4.0,
-          crossAxisSpacing: 4.0,
-        ),
-        childrenDelegate: SliverChildBuilderDelegate(
-            (context, index) {
-              return Image.asset('images/timg3.jpg');
-            },
-            childCount: 10
-        ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ),
+      childrenDelegate: SliverChildBuilderDelegate((context, index) {
+        return Assets.imagesTimg3.image();
+      }, childCount: 10),
     );
   }
-
 }
-

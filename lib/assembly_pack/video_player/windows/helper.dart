@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_text/init.dart';
@@ -37,12 +36,12 @@ class WinVideoHelper {
   static Future<File> setLocalVideoPath(
       {required File file, String? extension, String? name}) async {
     try {
-      final Uint8List? unit8 = file.readAsBytesSync();
+      final Uint8List unit8 = await file.readAsBytes();
       final File tempFile = await FileUtils.generateRandomTempFile(
         fileType: extension,
         name: name,
       );
-      final File newFile = await tempFile.writeAsBytes(unit8!);
+      final File newFile = await tempFile.writeAsBytes(unit8);
       return newFile;
     } catch (err) {
       rethrow;

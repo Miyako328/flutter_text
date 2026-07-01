@@ -87,9 +87,6 @@ class _DesktopDropTextState extends State<DesktopDropText> {
     final String filePath = path.join(dir.path, '${_file!.name}');
     Log.info(filePath);
     final File file = File(filePath);
-    if (!file.existsSync()) {
-      file.createSync();
-    }
     await file.writeAsBytes(result.rawBytes).whenComplete(
           () => shell.start('open ${dir.path}'),
         );

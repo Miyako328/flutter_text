@@ -37,7 +37,7 @@ class SkeletonPageState extends State<SkeletonPage> {
     try {
       final SkeletonManager<SqlUser> r =
           SkeletonManager<SqlUser>((List<SqlUser> items) async {
-        await  Future<void>.delayed(const Duration(seconds: 2));
+        await Future<void>.delayed(const Duration(seconds: 2));
         final List<SqlUser> list = await provider.getAllUser();
         setState(() {
           user = list;
@@ -59,36 +59,35 @@ class SkeletonPageState extends State<SkeletonPage> {
   Widget build(BuildContext context) {
     return Column(
       children: user.map((SqlUser e) {
-            return SkeletonItem<SqlUser>(
-              source: e,
-              skeletonManager: skeletonManager,
-              status: e.id != null
-                  ? SkeletonStatus.loadDone
-                  : SkeletonStatus.waitLoad,
-              skeleton: (BuildContext context) => Container(
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: screenUtil.adaptive(20),
-                    left: screenUtil.adaptive(35),
-                    bottom: screenUtil.adaptive(20),
-                  ),
-                  child: Container(
-                    width: screenUtil.adaptive(100),
-                    height: screenUtil.adaptive(30),
-                    color: Colors.grey.withOpacity(0.3),
-                  ),
-                ),
+        return SkeletonItem<SqlUser>(
+          source: e,
+          skeletonManager: skeletonManager,
+          status:
+              e.id != null ? SkeletonStatus.loadDone : SkeletonStatus.waitLoad,
+          skeleton: (BuildContext context) => Container(
+            child: Container(
+              padding: EdgeInsets.only(
+                top: screenUtil.adaptive(20),
+                left: screenUtil.adaptive(35),
+                bottom: screenUtil.adaptive(20),
               ),
-              child: (BuildContext context) => Container(
-                padding: EdgeInsets.only(
-                  top: screenUtil.adaptive(20),
-                  left: screenUtil.adaptive(35),
-                  bottom: screenUtil.adaptive(20),
-                ),
-                child: Text(e.name??''),
+              child: Container(
+                width: screenUtil.adaptive(100),
+                height: screenUtil.adaptive(30),
+                color: Colors.grey.withValues(alpha: 0.3),
               ),
-            );
-          }).toList(),
+            ),
+          ),
+          child: (BuildContext context) => Container(
+            padding: EdgeInsets.only(
+              top: screenUtil.adaptive(20),
+              left: screenUtil.adaptive(35),
+              bottom: screenUtil.adaptive(20),
+            ),
+            child: Text(e.name ?? ''),
+          ),
+        );
+      }).toList(),
     );
   }
 }

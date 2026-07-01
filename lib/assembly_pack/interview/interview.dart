@@ -30,7 +30,7 @@ Rect axisAlignedBoundingBox(Quad quad) {
       yMax = point.y;
     }
   }
-  return Rect.fromLTRB(xMin??0, yMin??0, xMax??0, yMax??0);
+  return Rect.fromLTRB(xMin ?? 0, yMin ?? 0, xMax ?? 0, yMax ?? 0);
 }
 
 class _InterViewState extends State<InterViewPage> {
@@ -82,7 +82,7 @@ class _InterViewState extends State<InterViewPage> {
                             height: _cellHeight,
                             width: _cellWidth,
                             child: Image.asset(
-                              'images/plane2.gif',
+                              'assets/images/plane2.gif',
                               width: 60,
                             ),
                           )

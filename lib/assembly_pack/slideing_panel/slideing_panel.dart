@@ -28,8 +28,7 @@ class SlidingDemoState extends State<SlidingDemo> {
     _open();
   }
 
-  void _open() {
-  }
+  void _open() {}
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +53,7 @@ class SlidingDemoState extends State<SlidingDemo> {
           child: new ConstrainedBox(
             constraints: BoxConstraints.expand(),
             child: new Image.asset(
-              "images/lake.jpg",
+              "assets/images/lake.jpg",
               fit: BoxFit.cover,
             ),
           ),

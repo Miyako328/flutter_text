@@ -101,36 +101,25 @@ dependencies:
     path: ./packages/epub_view
   webview_cef:
     path: /Users/lixuan/Documents/work/webview_cef
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_gen_runner: ^5.10.0
+
+flutter_gen:
+  output: lib/gen/
+  assets:
+    outputs:
+      style: camel-case
+
 flutter:
   uses-material-design: true
   assets:
-    - images/lake.jpg
-    - images/111.png
-    - images/timg.jpg
-    - images/timg2.jpg
-    - images/timg3.jpg
-    - images/sun.jpg
-    - images/plane1.gif
-    - images/plane2.gif
-    - images/oneday.gif
-    - images/cloud3.gif
-    - images/cloud2.gif
-    - images/cloud1.gif
-    - images/cloud5.gif
-    - images/test.gif
-    - images/weather/
-    - images/voice/
-    - images/
-    - images/_cat_sky.jpg
-    - assets/index.pdf
+    - assets/images/weather/
+    - assets/images/voice/
     - assets/
-    - assets/depth.json
-    - assets/result.json
-    - assets/long14.epub
     - assets/data/
     - assets/dll/
     - assets/images/

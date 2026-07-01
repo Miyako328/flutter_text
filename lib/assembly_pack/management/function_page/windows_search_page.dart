@@ -84,7 +84,7 @@ class _EmptyResult extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Image.asset(
-            'images/plane2.gif',
+            'assets/images/plane2.gif',
             width: 60,
           ),
           const SizedBox(height: 18),

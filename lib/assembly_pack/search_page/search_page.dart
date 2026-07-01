@@ -5,7 +5,6 @@ import 'package:self_utils/widget/search_field.dart';
 /// 搜索 demo
 
 class SearchDemoPage extends StatefulWidget {
-
   @override
   _SearchDemoPageState createState() => _SearchDemoPageState();
 }
@@ -67,17 +66,22 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("请搜索"), actions: <Widget>[
-        IconButton(icon: Icon(Icons.search), onPressed: () {
-          showSearch(context: context, delegate: SearchBarDelegate());
-        },)
-      ],),
+      appBar: AppBar(
+        title: Text("请搜索"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: SearchBarDelegate());
+            },
+          )
+        ],
+      ),
       body: ListView(
         children: <Widget>[
           SizedBox(
             height: 20,
           ),
-
           Container(
             width: 200,
             child: SearchField(
@@ -88,7 +92,7 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
               searchInputDecoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.black.withOpacity(0.8),
+                    color: Colors.black.withValues(alpha: 0.8),
                   ),
                 ),
                 border: OutlineInputBorder(
@@ -117,7 +121,7 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
                   hint: 'SearchField Sample 2',
                   searchStyle: TextStyle(
                     fontSize: 16,
-                    color: Colors.black.withOpacity(0.8),
+                    color: Colors.black.withValues(alpha: 0.8),
                   ),
                   validator: (String? x) {
                     if (!_statesOfIndia.contains(x) || x?.isEmpty == true) {
@@ -128,7 +132,7 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
                   searchInputDecoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.black.withOpacity(0.8),
+                        color: Colors.black.withValues(alpha: 0.8),
                       ),
                     ),
                     border: OutlineInputBorder(
@@ -159,14 +163,14 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
                   bottomRight: Radius.circular(8),
                 ),
                 border: Border.all(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.grey.withValues(alpha: 0.5),
                 ),
               ),
               suggestionItemDecoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xff9D50BB).withOpacity(0.5),
-                    Color(0xff6E48AA).withOpacity(0.8),
+                    Color(0xff9D50BB).withValues(alpha: 0.5),
+                    Color(0xff6E48AA).withValues(alpha: 0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -174,7 +178,7 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
               ),
               searchInputDecoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.grey.withOpacity(0.2),
+                fillColor: Colors.grey.withValues(alpha: 0.2),
                 focusedBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
                     color: Colors.white,
@@ -196,7 +200,7 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
             child: SearchField(
               suggestionStyle: TextStyle(color: Colors.green),
               suggestionItemDecoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.grey.withValues(alpha: 0.2),
                 gradient: LinearGradient(colors: [
                   Color(0xff70e1f5),
                   Color(0xffffd194),
@@ -239,7 +243,6 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
               },
             ),
           ),
-
           Container(
             child: Column(
               children: [
@@ -255,13 +258,14 @@ class _SearchDemoPageState extends State<SearchDemoPage> {
                         fontSize: screenUtil.adaptive(18)),
                   ),
                 ),
-                Container(decoration: BoxDecoration(
-                  color: Color(0xffffffff),
-                  border: Border.all(
-                    color: Color(0xE6797979),
-                    width: 1.0,
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xffffffff),
+                    border: Border.all(
+                      color: Color(0xE6797979),
+                      width: 1.0,
+                    ),
                   ),
-                ),
                   child: SearchField(
                     suggestions: _suggestions,
                     controller: _searchController,
@@ -302,10 +306,13 @@ class SearchBarDelegate extends SearchDelegate<String> {
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
-      IconButton(icon: Icon(Icons.clear), onPressed: () {
-        // 清空搜索内容
-        query = "";
-      },)
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          // 清空搜索内容
+          query = "";
+        },
+      )
     ];
   }
 
@@ -334,25 +341,28 @@ class SearchBarDelegate extends SearchDelegate<String> {
   // 输入时的推荐及搜索结果
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestionList = query.isEmpty ? recentList : searchList.where((
-        input) => input.startsWith(query)).toList();
+    final suggestionList = query.isEmpty
+        ? recentList
+        : searchList.where((input) => input.startsWith(query)).toList();
     return ListView.builder(
       itemCount: suggestionList.length,
       itemBuilder: (context, index) {
         // 创建一个富文本，匹配的内容特别显示
-        return ListTile(title: RichText(text: TextSpan(
-          text: suggestionList[index].substring(0, query.length),
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold),
-          children: [
-            TextSpan(
-                text: suggestionList[index].substring(query.length),
-                style: TextStyle(color: Colors.grey)
-            )
-          ],)),
-          onTap: (){
+        return ListTile(
+          title: RichText(
+              text: TextSpan(
+            text: suggestionList[index].substring(0, query.length),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            children: [
+              TextSpan(
+                  text: suggestionList[index].substring(query.length),
+                  style: TextStyle(color: Colors.grey))
+            ],
+          )),
+          onTap: () {
             query = suggestionList[index];
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(query)));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(query)));
           },
         );
       },

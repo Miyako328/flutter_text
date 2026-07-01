@@ -109,7 +109,7 @@ class _WinCalendarPageState extends State<WinCalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GlobalStore.isMobile
-          ? Column()
+          ? const Column()
           : Row(
               children: [
                 Expanded(

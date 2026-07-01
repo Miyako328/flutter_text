@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter_text/gen/assets.gen.dart';
 import 'package:flutter_text/init.dart';
 import 'package:self_utils/generated/l10n.dart';
 
@@ -580,7 +581,7 @@ class _MineSweepingState extends State<MineSweeping> {
                     height: 50,
                     child: Row(
                       children: <Widget>[
-                        Image.asset('assets/images/bomb.png'),
+                        Assets.imagesBomb.image(),
                         Text(
                           '$numMines',
                           style: const TextStyle(fontSize: 28),
@@ -593,7 +594,7 @@ class _MineSweepingState extends State<MineSweeping> {
                     height: 50,
                     child: Row(
                       children: <Widget>[
-                        Image.asset('assets/images/flag.png'),
+                        Assets.imagesFlag.image(),
                         Text(
                           '$flags',
                           style: const TextStyle(fontSize: 28),

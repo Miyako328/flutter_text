@@ -300,10 +300,9 @@ class _PageState extends State<_Page> with TickerProviderStateMixin {
                   },
                   child: Container(
                     padding: EdgeInsets.only(
-                      left: screenUtil.adaptive(35),
-                      right: screenUtil.adaptive(20),
-                      bottom: screenUtil.adaptive(10)
-                    ),
+                        left: screenUtil.adaptive(35),
+                        right: screenUtil.adaptive(20),
+                        bottom: screenUtil.adaptive(10)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -400,12 +399,13 @@ class _PageState extends State<_Page> with TickerProviderStateMixin {
         boxShape: NeumorphicBoxShape.circle(),
       ),
       child: Container(
-          height: 200,
-          width: 200,
-          child: Image.asset(
-            'images/002.jpg',
-            fit: BoxFit.cover,
-          ),),
+        height: 200,
+        width: 200,
+        child: Image.asset(
+          'assets/images/002.jpg',
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
@@ -456,8 +456,8 @@ class _PageState extends State<_Page> with TickerProviderStateMixin {
             NeumorphicSlider(
               height: 8,
               min: 0,
-              max: times?.toDouble()??0,
-              value: currentTime?.toDouble()??0,
+              max: times?.toDouble() ?? 0,
+              value: currentTime?.toDouble() ?? 0,
               onChanged: (double value) {
                 onSeekChange(value.toInt());
               },

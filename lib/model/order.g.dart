@@ -6,8 +6,7 @@ part of 'order.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Order _$OrderFromJson(Map<String, dynamic> json) =>
-    Order(
+Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       json['e'] as String,
       json['c'] as String,
       json['a'] as String,
@@ -30,8 +29,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) =>
       json['t'] as num,
     );
 
-Map<String, dynamic> _$OrderToJson(Order instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
       'e': instance.type,
       'c': instance.code,
       'f': instance.futureCode,

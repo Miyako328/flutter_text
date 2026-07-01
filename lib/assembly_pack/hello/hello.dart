@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_text/gen/assets.gen.dart';
 import 'package:flutter_text/init.dart';
 import 'package:self_utils/widget/animated_wave.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -35,7 +36,7 @@ class HelloDemoState extends State<HelloDemo> {
 
   //获取gif图的帧数
   Future<void> _getPlane() async {
-    final ByteData data = await rootBundle.load('images/plane2.gif');
+    final ByteData data = await rootBundle.load('assets/images/plane2.gif');
     final Uint8List uintList = Uint8List.view(data.buffer);
     final ui.Codec code = await ui.instantiateImageCodec(uintList);
     final ui.FrameInfo first = await code.getNextFrame();
@@ -60,8 +61,8 @@ class HelloDemoState extends State<HelloDemo> {
         Positioned.fill(
             child: Align(
           alignment: Alignment.topLeft,
-          child: Image.asset("images/cloud5.gif",
-              width: MediaQuery.of(context).size.width),
+          child: Assets.imagesCloud5
+              .image(width: MediaQuery.of(context).size.width),
         )),
         onWave(AnimatedWave(
           height: 180,
@@ -79,8 +80,7 @@ class HelloDemoState extends State<HelloDemo> {
         )),
         Positioned.fill(
             child: Center(
-          child: Image.asset(
-            "images/plane2.gif",
+          child: Assets.imagesPlane2.image(
             width: 60,
           ),
         )),

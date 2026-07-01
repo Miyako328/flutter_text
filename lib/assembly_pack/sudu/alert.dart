@@ -25,7 +25,7 @@ class AlertGameOver extends StatelessWidget {
         TextButton(
           style: ButtonStyle(
               foregroundColor:
-                  MaterialStateProperty.all<Color>(Styles.primaryColor)),
+                  WidgetStateProperty.all<Color>(Styles.primaryColor)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -34,7 +34,7 @@ class AlertGameOver extends StatelessWidget {
         TextButton(
           style: ButtonStyle(
               foregroundColor:
-                  MaterialStateProperty.all<Color>(Styles.primaryColor)),
+                  WidgetStateProperty.all<Color>(Styles.primaryColor)),
           onPressed: () {
             Navigator.pop(context);
             restartGame = true;
@@ -44,7 +44,7 @@ class AlertGameOver extends StatelessWidget {
         TextButton(
           style: ButtonStyle(
               foregroundColor:
-                  MaterialStateProperty.all<Color>(Styles.primaryColor)),
+                  WidgetStateProperty.all<Color>(Styles.primaryColor)),
           onPressed: () {
             Navigator.pop(context);
             newGame = true;
@@ -91,14 +91,14 @@ class AlertNumbers extends State<AlertNumbersState> {
               })
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Styles.white),
+              backgroundColor: WidgetStateProperty.all<Color>(Styles.white),
               foregroundColor:
-                  MaterialStateProperty.all<Color>(Styles.primaryColor),
-              shape: MaterialStateProperty.all<OutlinedBorder>(
+                  WidgetStateProperty.all<Color>(Styles.primaryColor),
+              shape: WidgetStateProperty.all<OutlinedBorder>(
                   RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               )),
-              side: MaterialStateProperty.all<BorderSide>(BorderSide(
+              side: WidgetStateProperty.all<BorderSide>(BorderSide(
                 color: Styles.darkGrey,
                 width: 1,
                 style: BorderStyle.solid,
@@ -116,7 +116,7 @@ class AlertNumbers extends State<AlertNumbersState> {
 
   List<Row> createRows() {
     final List<List<int>> numberLists = [numberList1, numberList2, numberList3];
-    final List<Row> rowList = List<Row>.filled(3, Row());
+    final List<Row> rowList = List<Row>.filled(3, const Row());
     for (int i = 0; i <= 2; i++) {
       rowList[i] = Row(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_text/gen/assets.gen.dart';
 
 /// 开卷2 4题
 class MyDraggableWidget extends StatefulWidget {
@@ -137,16 +138,18 @@ class _MyPicWidgetState extends State<MyPicWidget> {
 
   //获取数据方法
   List<dynamic> getListData() {
-    return [1, 2, 3, 5,5,4,232,323,23,23,2];
+    return [1, 2, 3, 5, 5, 4, 232, 323, 23, 23, 2];
   }
 
   //数据处理组件
   Widget _picWidget(int index) {
     return Stack(
       children: [
-        Image.asset('images/timg3.jpg', fit: BoxFit.cover,
+        Assets.imagesTimg3.image(
+          fit: BoxFit.cover,
           height: 200.0,
-          width: MediaQuery.of(context).size.width,),
+          width: MediaQuery.of(context).size.width,
+        ),
         Positioned(
           child: Container(
             child: Text('${index}'),

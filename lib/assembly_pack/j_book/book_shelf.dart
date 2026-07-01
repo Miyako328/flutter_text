@@ -681,7 +681,7 @@ class _BookCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final bool hasCover = path != null && File(path!).existsSync();
+    final bool hasCover = path != null;
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
       child: SizedBox(
@@ -691,6 +691,13 @@ class _BookCover extends StatelessWidget {
             ? Image.file(
                 File(path!),
                 fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
+                  return ColoredBox(
+                    color: colorScheme.surfaceContainerHighest,
+                    child: const Icon(Icons.menu_book_outlined),
+                  );
+                },
               )
             : ColoredBox(
                 color: _fallbackBookColor(colorScheme, path),

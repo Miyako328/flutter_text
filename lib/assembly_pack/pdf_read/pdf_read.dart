@@ -42,7 +42,7 @@ class _PdfReadState extends State<PdfRead> {
   }
 
   Future<File> createFileOfPdfUrl() async {
-    //final url = "http://africau.edu/images/default/sample.pdf";
+    //final url = "http://africau.edu/assets/images/default/sample.pdf";
     final filename = 'index.pdf';
     //var request = await HttpClient().getUrl(Uri.parse(url));
     //var response = await request.close();

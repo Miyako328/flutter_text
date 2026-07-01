@@ -99,7 +99,7 @@ class CompressController extends GetxController {
       statusMessage.value = '正在压缩图片...';
 
       // 模拟压缩过程
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
 
       // 模拟压缩后的文件
       final compressedPath = '${originalFile.value!.path}_compressed';
@@ -190,7 +190,7 @@ class CompressController extends GetxController {
       // 应用自定义设置
       if (customQuality != null) quality.value = customQuality;
 
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 3));
 
       // 模拟压缩
       final compressedPath = '${originalFile.value!.path}_custom_compressed';
@@ -231,7 +231,7 @@ class CompressController extends GetxController {
       _logAction('开始批量压缩');
 
       // 模拟批量压缩不同质量
-      final qualities = [0.9, 0.7, 0.5, 0.3];
+      const List<double> qualities = <double>[0.9, 0.7, 0.5, 0.3];
       for (int i = 0; i < qualities.length; i++) {
         Future.delayed(Duration(seconds: i), () {
           setQuality(qualities[i]);

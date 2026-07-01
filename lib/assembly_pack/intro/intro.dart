@@ -13,7 +13,7 @@ class IntroPage extends StatefulWidget {
 class _IntroState extends State<IntroPage> {
   late Intro intro;
 
-   _IntroState() {
+  _IntroState() {
     intro = Intro(
       stepCount: 4,
       maskClosable: true,
@@ -57,25 +57,26 @@ class _IntroState extends State<IntroPage> {
                         if (params.currentStepIndex + 1 != params.stepCount)
                           OutlinedButton(
                             style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
+                              foregroundColor: WidgetStateProperty.all<Color>(
                                 Colors.white,
                               ),
-                              overlayColor: MaterialStateProperty.all<Color>(
-                                Colors.white.withOpacity(0.1),
+                              overlayColor: WidgetStateProperty.all<Color>(
+                                Colors.white.withValues(alpha: 0.1),
                               ),
-                              side: MaterialStateProperty.all<BorderSide>(
-                                BorderSide(
+                              side: WidgetStateProperty.all<BorderSide>(
+                                const BorderSide(
                                   color: Colors.white,
                                 ),
                               ),
-                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                EdgeInsets.symmetric(
+                              padding:
+                                  WidgetStateProperty.all<EdgeInsetsGeometry>(
+                                const EdgeInsets.symmetric(
                                   vertical: 0,
                                   horizontal: 8,
                                 ),
                               ),
-                              shape: MaterialStateProperty.all<OutlinedBorder>(
-                                StadiumBorder(),
+                              shape: WidgetStateProperty.all<OutlinedBorder>(
+                                const StadiumBorder(),
                               ),
                             ),
                             onPressed: () {
@@ -93,25 +94,26 @@ class _IntroState extends State<IntroPage> {
                         ),
                         OutlinedButton(
                           style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all<Color>(
+                            foregroundColor: WidgetStateProperty.all<Color>(
                               Colors.white,
                             ),
-                            overlayColor: MaterialStateProperty.all<Color>(
-                              Colors.white.withOpacity(0.1),
+                            overlayColor: WidgetStateProperty.all<Color>(
+                              Colors.white.withValues(alpha: 0.1),
                             ),
-                            side: MaterialStateProperty.all<BorderSide>(
-                              BorderSide(
+                            side: WidgetStateProperty.all<BorderSide>(
+                              const BorderSide(
                                 color: Colors.white,
                               ),
                             ),
-                            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(
+                            padding:
+                                WidgetStateProperty.all<EdgeInsetsGeometry>(
+                              const EdgeInsets.symmetric(
                                 vertical: 0,
                                 horizontal: 8,
                               ),
                             ),
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                              StadiumBorder(),
+                            shape: WidgetStateProperty.all<OutlinedBorder>(
+                              const StadiumBorder(),
                             ),
                           ),
                           onPressed: () {
@@ -148,7 +150,7 @@ class _IntroState extends State<IntroPage> {
   void initState() {
     super.initState();
     Timer(
-      Duration(
+      const Duration(
         milliseconds: 500,
       ),
       () {
@@ -160,7 +162,19 @@ class _IntroState extends State<IntroPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        if (didPop) {
+          return;
+        }
+        final IntroStatus introStatus = intro.getStatus();
+        if (introStatus.isOpen) {
+          intro.dispose();
+          return;
+        }
+        Navigator.of(context).pop();
+      },
       child: Scaffold(
         appBar: AppBar(
           title: const Text('intro page'),
@@ -179,7 +193,7 @@ class _IntroState extends State<IntroPage> {
                     fallbackHeight: 100,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Placeholder(
@@ -187,7 +201,7 @@ class _IntroState extends State<IntroPage> {
                   key: intro.keys[2],
                   fallbackHeight: 100,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Row(
@@ -210,7 +224,7 @@ class _IntroState extends State<IntroPage> {
         floatingActionButton: FloatingActionButton(
           /// 1st guide
           key: intro.keys[0],
-          child: Icon(
+          child: const Icon(
             Icons.play_arrow,
           ),
           onPressed: () {
@@ -218,16 +232,6 @@ class _IntroState extends State<IntroPage> {
           },
         ),
       ),
-      onWillPop: () async {
-        // sometimes you need get current status
-        final IntroStatus introStatus = intro.getStatus();
-        if (introStatus.isOpen) {
-          // destroy guide page when tap back key
-          intro.dispose();
-          return false;
-        }
-        return true;
-      },
     );
   }
 }

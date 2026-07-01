@@ -31,7 +31,7 @@ class _DesktopSysManagerState extends State<DesktopSysManager>
 
   /// 系统托盘里显示图标
   void _show() async {
-    await _trayManager.setIcon('images/favicon.ico');
+    await _trayManager.setIcon('assets/images/favicon.ico');
     await _trayManager.setToolTip('flutter_text');
     _generateContextMenu();
   }

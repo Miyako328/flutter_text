@@ -7,8 +7,8 @@ import 'dart:typed_data';
 class HelloController extends GetxController {
   RxBool isLoading = false.obs;
   RxInt frameCount = 0.obs;
-  RxString planeImagePath = "images/plane2.gif".obs;
-  
+  RxString planeImagePath = "assets/images/plane2.gif".obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -19,7 +19,7 @@ class HelloController extends GetxController {
   Future<void> _getPlane() async {
     try {
       isLoading.value = true;
-      final ByteData data = await rootBundle.load('images/plane2.gif');
+      final ByteData data = await rootBundle.load('assets/images/plane2.gif');
       final Uint8List uintList = Uint8List.view(data.buffer);
       final ui.Codec code = await ui.instantiateImageCodec(uintList);
       final ui.FrameInfo first = await code.getNextFrame();

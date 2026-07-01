@@ -61,7 +61,7 @@ class FlexibleSpaceBarPage extends StatelessWidget {
                       ),
                     ),
                     background: Image.asset(
-                      'images/sun.jpg',
+                      'assets/images/sun.jpg',
                       fit: BoxFit.cover,
                     ),
                   ),

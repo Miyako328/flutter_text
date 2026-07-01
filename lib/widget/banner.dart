@@ -1,12 +1,7 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_text/init.dart';
 import 'package:flutter_text/model/img_model.dart';
 import 'package:self_utils/widget/image_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 
 /// /// 显示状态栏
 //   void _statusBarShow() {
@@ -40,7 +35,7 @@ class WidgetBanner extends StatefulWidget {
     this.height = 250,
     this.onTap,
     this.isShowIndicator = false,
-  }) : assert(_images != null);
+  });
 
   @override
   _WidgetBannerState createState() => _WidgetBannerState();
@@ -57,22 +52,25 @@ class _WidgetBannerState extends State<WidgetBanner> {
     super.initState();
     _currentIndex = widget._images.length * 5;
     _pageController = PageController(initialPage: _currentIndex);
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: [SystemUiOverlay.bottom]                      /// 隐藏状态栏，显示 android 底部导航栏
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom]
+
+        /// 隐藏状态栏，显示 android 底部导航栏
+        );
     _initTimer();
   }
 
   //关闭的时候还原顶部状态栏
   @override
   void dispose() {
-    super.dispose();
     _timer?.cancel();
-    SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]                      /// 隐藏状态栏，显示 android 底部导航栏
-    );;
+    _pageController.dispose();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]
+
+        /// 隐藏状态栏，显示 android 底部导航栏
+        );
+    super.dispose();
   }
 
   @override
@@ -134,7 +132,7 @@ class _WidgetBannerState extends State<WidgetBanner> {
                 }
               },
               child: Container(
-                padding: EdgeInsets.only(left: 30, right: 30),
+                padding: const EdgeInsets.only(left: 30, right: 30),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -179,8 +177,9 @@ class _WidgetBannerState extends State<WidgetBanner> {
 
   //跳转外部浏览器url
   void _overBrowserUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
       throw 'Could not launch $url';
     }

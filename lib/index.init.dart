@@ -165,7 +165,7 @@ List<MainWidgetModel> page1 = <MainWidgetModel>[
     title: 'url scheme text--',
     route: null,
     onTapFunc: (_) {
-      launch('market://details?id=com.example.exhibition');
+      launchUrl(Uri.parse('market://details?id=com.example.exhibition'));
     },
     icon: const Icon(Icons.scanner),
   ),
@@ -187,12 +187,12 @@ List<MainWidgetModel> page1 = <MainWidgetModel>[
   ),
   MainWidgetModel(
     title: 'Google 相册解析--',
-    route: GoogleView(),
+    route: const GoogleView(),
     icon: const Icon(Icons.photo_library),
   ),
   MainWidgetModel(
     title: 'iCloud 相册解析--',
-    route: ICloudView(),
+    route: const ICloudView(),
     icon: const Icon(Icons.cloud),
   )
 ];
@@ -230,7 +230,7 @@ List<MainWidgetModel> page2 = <MainWidgetModel>[
   ),
   MainWidgetModel(
     title: 'ShellTest',
-    route: ShellTest(),
+    route: const ShellTest(),
     icon: const Icon(Icons.keyboard),
   ),
   MainWidgetModel(
@@ -245,7 +245,7 @@ List<MainWidgetModel> page2 = <MainWidgetModel>[
   ),
   MainWidgetModel(
     title: 'TextStyleTest',
-    route: TextStyleTest(),
+    route: const TextStyleTest(),
     icon: const Icon(Icons.keyboard),
   ),
   MainWidgetModel(
@@ -310,12 +310,12 @@ List<MainWidgetModel> page2 = <MainWidgetModel>[
   ),
   MainWidgetModel(
     title: 'PCKeyboardPage使用',
-    route: PCKeyboardPage(),
+    route: const PCKeyboardPage(),
     icon: const Icon(Icons.keyboard),
   ),
   MainWidgetModel(
     title: 'TextInputTest',
-    route: TextInputTest(),
+    route: const TextInputTest(),
     icon: const Icon(Icons.keyboard),
   ),
   MainWidgetModel(
@@ -365,7 +365,7 @@ List<MainWidgetModel> page2 = <MainWidgetModel>[
   ),
   MainWidgetModel(
     title: '分组列表',
-    route: GroupListPage(),
+    route: const GroupListPage(),
     icon: const Icon(Icons.group_add),
   ),
   MainWidgetModel(
@@ -376,7 +376,7 @@ List<MainWidgetModel> page2 = <MainWidgetModel>[
   MainWidgetModel(
     title: '悬浮弹窗',
     onTapFunc: (context) {
-      DragOverlay.show(context: context, view: GroupListPage());
+      DragOverlay.show(context: context, view: const GroupListPage());
     },
     icon: const Icon(Icons.group_add),
   ),
@@ -599,7 +599,7 @@ List<MainWidgetModel> page3 = <MainWidgetModel>[
   ),
   MainWidgetModel(
     title: '书架',
-    route: BookShelf(),
+    route: const BookShelf(),
     icon: const Icon(Icons.book),
   ),
   MainWidgetModel(
@@ -650,7 +650,7 @@ List<MainWidgetModel> page4 = [
   ),
   MainWidgetModel(
     title: '书架',
-    route: BookShelf(),
+    route: const BookShelf(),
     icon: const Icon(Icons.book),
   ),
   MainWidgetModel(

@@ -9,15 +9,12 @@ class KeyBoardListenerPage extends StatefulWidget {
 
 //todo 可以监听键盘，但是不太行
 class _KeyBoardListenerPageState extends State<KeyBoardListenerPage> {
-  late FocusNode _node;
+  final FocusNode _node = FocusNode();
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {
-      _node = FocusNode();
-      setState(() {});
-    });
+  void dispose() {
+    _node.dispose();
+    super.dispose();
   }
 
   @override
@@ -26,13 +23,13 @@ class _KeyBoardListenerPageState extends State<KeyBoardListenerPage> {
       appBar: AppBar(
         title: const Text('KeyBoardListenerPage'),
       ),
-      body: RawKeyboardListener(
+      body: KeyboardListener(
         autofocus: true,
-        onKey: (RawKeyEvent event) {
+        onKeyEvent: (KeyEvent event) {
           Log.info(event);
         },
         focusNode: _node,
-        child: Container(),
+        child: const SizedBox.shrink(),
       ),
     );
   }

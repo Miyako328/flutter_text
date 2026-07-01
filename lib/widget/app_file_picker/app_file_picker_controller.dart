@@ -125,7 +125,7 @@ class AppFilePickerController extends GetxController {
       if (result == null) {
         return;
       }
-      _addFiles(
+      await _addFiles(
         result.files
             .where((PlatformFile file) => file.path?.isNotEmpty == true)
             .map(
@@ -163,7 +163,7 @@ class AppFilePickerController extends GetxController {
           source: ImageSource.gallery,
         );
         if (video != null) {
-          _addFiles(
+          await _addFiles(
             <AppPickedFile>[
               await _fromXFile(video, source: AppPickerSource.gallery),
             ],
@@ -174,7 +174,7 @@ class AppFilePickerController extends GetxController {
 
       if (isMulti) {
         final List<XFile> images = await _imagePicker.pickMultiImage();
-        _addFiles(
+        await _addFiles(
           await Future.wait(
             images.map(
               (XFile file) => _fromXFile(
@@ -189,7 +189,7 @@ class AppFilePickerController extends GetxController {
           source: ImageSource.gallery,
         );
         if (image != null) {
-          _addFiles(
+          await _addFiles(
             <AppPickedFile>[
               await _fromXFile(image, source: AppPickerSource.gallery),
             ],
@@ -213,7 +213,7 @@ class AppFilePickerController extends GetxController {
         source: ImageSource.camera,
       );
       if (image != null) {
-        _addFiles(
+        await _addFiles(
           <AppPickedFile>[
             await _fromXFile(image, source: AppPickerSource.camera),
           ],
@@ -350,13 +350,19 @@ class AppFilePickerController extends GetxController {
     }
   }
 
-  void _addFiles(List<AppPickedFile> files) {
+  Future<void> _addFiles(List<AppPickedFile> files) async {
     if (files.isEmpty) {
       return;
     }
 
-    final List<AppPickedFile> nextFiles = files
-        .where((AppPickedFile file) => File(file.path).existsSync())
+    final List<AppPickedFile> existingFiles = <AppPickedFile>[];
+    for (final AppPickedFile file in files) {
+      if (await File(file.path).exists()) {
+        existingFiles.add(file);
+      }
+    }
+
+    final List<AppPickedFile> nextFiles = existingFiles
         .where(
           (AppPickedFile file) =>
               !pickedFiles.any((AppPickedFile item) => item.path == file.path),
@@ -425,7 +431,7 @@ class AppFilePickerController extends GetxController {
     if (assets == null || assets.isEmpty) {
       return;
     }
-    _addFiles(
+    await _addFiles(
       (await Future.wait(
         assets.map(
           (AssetEntity asset) => _fromAssetEntity(
@@ -454,7 +460,7 @@ class AppFilePickerController extends GetxController {
       source: AppPickerSource.camera,
     );
     if (file != null) {
-      _addFiles(<AppPickedFile>[file]);
+      await _addFiles(<AppPickedFile>[file]);
     }
   }
 
@@ -467,7 +473,7 @@ class AppFilePickerController extends GetxController {
       return null;
     }
     final String name = await _assetName(asset, file);
-    final int? size = file.existsSync() ? file.lengthSync() : null;
+    final int? size = await file.exists() ? await file.length() : null;
     return AppPickedFile(
       path: file.path,
       name: name,

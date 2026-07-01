@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class LoginVideoPage extends StatefulWidget {
+  @override
   LoginVideoPageState createState() => LoginVideoPageState();
 }
 
@@ -13,8 +14,8 @@ class LoginVideoPageState extends State<LoginVideoPage> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(
-        'https://storage.googleapis.com/coverr-main/mp4%2FBlue%20Joy.mp4')
+    _controller = VideoPlayerController.networkUrl(Uri.parse(
+        'https://storage.googleapis.com/coverr-main/mp4%2FBlue%20Joy.mp4'))
       ..initialize().then((_) {
         if (!mounted) {
           return;
@@ -65,11 +66,11 @@ class LoginVideoPageState extends State<LoginVideoPage> {
                 child: MaterialButton(
                   onPressed: () {},
                   child: const Text(
-                    "微信登录",
+                    '微信登录',
                     style: TextStyle(fontSize: 15.0),
                   ),
-                  color: Color(0xffFFDB2E),
-                  textColor: Color(0xff202326),
+                  color: const Color(0xffFFDB2E),
+                  textColor: const Color(0xff202326),
                   height: 44.0,
                   minWidth: 240.0,
                   elevation: 0.0,
@@ -83,21 +84,21 @@ class LoginVideoPageState extends State<LoginVideoPage> {
                 child: MaterialButton(
                   onPressed: () {},
                   child: const Text(
-                    "手机号登录",
+                    '手机号登录',
                     style: TextStyle(fontSize: 15.0),
                   ),
-                  color: Color(0xff202326),
+                  color: const Color(0xff202326),
                   height: 44.0,
                   minWidth: 240.0,
                   elevation: 0.0,
-                  textColor: Color(0xffededed),
+                  textColor: const Color(0xffededed),
                 ),
               ),
               const SizedBox(
                 height: 60.0,
               ),
               const Text(
-                "我已阅读并同意《服务协议》及《隐私政策》",
+                '我已阅读并同意《服务协议》及《隐私政策》',
                 style: TextStyle(color: Colors.white, fontSize: 13.0),
               )
             ],
@@ -106,11 +107,11 @@ class LoginVideoPageState extends State<LoginVideoPage> {
         Positioned(
           width: MediaQuery.of(context).size.width,
           top: 80.0,
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
+            children: <Widget>[
               Text(
-                "登录",
+                '登录',
                 style: TextStyle(
                     fontSize: 40.0,
                     fontWeight: FontWeight.w400,
@@ -120,7 +121,7 @@ class LoginVideoPageState extends State<LoginVideoPage> {
                 height: 10.0,
               ),
               Text(
-                "Welcome to Login",
+                'Welcome to Login',
                 style: TextStyle(color: Colors.white, fontSize: 15.0),
               )
             ],

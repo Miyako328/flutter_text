@@ -43,9 +43,9 @@ class MusicHelper {
   // 本地文件
   static Future<MusicModel> setAppLocateFile(FilePickerResult files) async {
     final PlatformFile _file = ArrayHelper.get(files.files, 0)!;
-    final Uint8List unit8 = File(_file.path!).readAsBytesSync();
-    final File tempFile =
-        await FileUtils.generateRandomTempFile(fileType: 'mp3', name: _file.name);
+    final Uint8List unit8 = await File(_file.path!).readAsBytes();
+    final File tempFile = await FileUtils.generateRandomTempFile(
+        fileType: 'mp3', name: _file.name);
     final File newFile = await tempFile.writeAsBytes(unit8);
 
     //缓存文件
@@ -68,6 +68,4 @@ class MusicHelper {
     }
     return ArrayHelper.get(_mode, index)!;
   }
-
-
 }

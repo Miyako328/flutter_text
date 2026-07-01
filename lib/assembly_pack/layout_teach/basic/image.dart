@@ -9,7 +9,7 @@ class BasicImgPage extends StatefulWidget {
 }
 
 class _BasicImgPageState extends State<BasicImgPage> {
-  static const AssetImage img = AssetImage('images/sun.jpg');
+  static const AssetImage img = AssetImage('assets/images/sun.jpg');
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _BasicImgPageState extends State<BasicImgPage> {
         ),
         PopupTextAndExText(
             showText:
-            'fitWidth：图片的宽度会缩放到显示空间的宽度，高度会按比例缩放，然后居中显示，图片不会变形，超出显示空间部分会被剪裁。'
+                'fitWidth：图片的宽度会缩放到显示空间的宽度，高度会按比例缩放，然后居中显示，图片不会变形，超出显示空间部分会被剪裁。'
                 'fitHeight：图片的高度会缩放到显示空间的高度，宽度会按比例缩放，然后居中显示，图片不会变形，超出显示空间部分会被剪裁。',
             builderWidget: Row(
               children: const <Image>[

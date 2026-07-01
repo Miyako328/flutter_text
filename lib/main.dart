@@ -62,7 +62,7 @@ class AssemblyState extends State<Assembly> {
       shortcutItem: const ShortcutItem(
         type: 'charts',
         localizedTitle: 'charts',
-        icon: 'images/sun.jpg',
+        icon: 'assets/images/sun.jpg',
       ),
       callBackFunc: () async {
         final NavigatorState navigatorHelper =

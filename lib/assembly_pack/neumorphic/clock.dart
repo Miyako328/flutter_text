@@ -8,7 +8,7 @@ class ClockAlarmPage extends StatelessWidget {
     return NeumorphicTheme(
       theme: NeumorphicThemeData(
           defaultTextColor: Color(0xFF303E57),
-          accentColor: Color(0xFF7B79FC).withOpacity(0.8),
+          accentColor: Color(0xFF7B79FC).withValues(alpha: 0.8),
           variantColor: Colors.black38,
           baseColor: Color(0xFFF8F9FC),
           depth: 8,
