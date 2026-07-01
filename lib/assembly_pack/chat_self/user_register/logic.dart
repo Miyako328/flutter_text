@@ -1,7 +1,9 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:self_utils/utils/datetime_utils.dart';
 import 'package:self_utils/utils/log_utils.dart';
-import 'package:self_utils/utils/navigator.dart';
 import 'package:self_utils/utils/toast_utils.dart';
 import 'package:flutter_text/widget/chat/helper/user/user.dart';
 import 'package:flutter_text/widget/chat/helper/user/user_db.dart';
@@ -10,17 +12,22 @@ import 'package:get/get.dart';
 import 'state.dart';
 
 class UserRegisterLogic extends GetxController {
-  final state = UserRegisterState();
+  final UserRegisterState state = UserRegisterState();
 
-  void onRegister() async {
+  Future<void> onRegister() async {
     final FormState? from = state.formKey.currentState;
-    if (from !=null && from.validate()) {
+    if (from != null && from.validate()) {
       from.save();
-      final int id = await PostgresUser.getMapList();
+      final String name = state.nameController.text.trim();
+      final User? exists = await PostgresUser.findByName(name);
+      if (exists != null) {
+        ToastUtils.showToast(msg: '用户名已存在');
+        return;
+      }
       final User user = User()
-        ..id = id + 1
-        ..image = state.imageController.text
-        ..name = state.nameController.text
+        ..image = state.imageController.text.trim()
+        ..name = name
+        ..passwordHash = _hashPassword(state.passwordController.text)
         ..createTime = DateTimeHelper.getLocalTimeStamp() ~/ 1000
         ..updateTime = DateTimeHelper.getLocalTimeStamp() ~/ 1000;
 
@@ -34,5 +41,9 @@ class UserRegisterLogic extends GetxController {
         rethrow;
       }
     }
+  }
+
+  String _hashPassword(String password) {
+    return sha256.convert(utf8.encode(password)).toString();
   }
 }

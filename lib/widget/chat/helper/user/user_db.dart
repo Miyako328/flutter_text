@@ -1,15 +1,11 @@
-import 'dart:convert';
-
-import 'package:self_utils/utils/datetime_utils.dart';
-import 'package:self_utils/utils/log_utils.dart';
 import 'package:flutter_text/widget/chat/helper/global/event.dart';
 import 'package:flutter_text/widget/chat/helper/user/user.dart';
-import 'package:postgres/postgres.dart';
-
-part 'user_db_helper.dart';
+import 'package:mysql1/mysql1.dart';
+import 'package:self_utils/utils/datetime_utils.dart';
+import 'package:self_utils/utils/log_utils.dart';
 
 class PostgresUser {
-  ///表名
+  /// 表名
   static String name = 'user_db';
 
   static String columnId = 'id';
@@ -17,105 +13,204 @@ class PostgresUser {
   static String columnImage = 'image';
   static String columnCreateTime = 'createTime';
   static String columnUpdateTime = 'updateTime';
+  static String columnPasswordHash = 'passwordHash';
 
-  static late PostgreSQLConnection connection;
+  static MySqlConnection? connection;
+  static bool _isOpen = false;
 
   static Future<void> init() async {
-    connection = PostgreSQLConnection(
-        DbGlobal.ip, DbGlobal.port, DbGlobal.database,
-        username: DbGlobal.username, password: DbGlobal.password);
-    await connection.open();
-    Log.info('连接数据库');
+    if (_isOpen && connection != null) {
+      return;
+    }
+
+    final ConnectionSettings settings = ConnectionSettings(
+      host: DbGlobal.ip,
+      port: DbGlobal.port,
+      user: DbGlobal.username,
+      password: DbGlobal.password,
+      db: DbGlobal.database,
+      timeout: const Duration(seconds: 5),
+    );
+
+    connection = await MySqlConnection.connect(settings);
+    _isOpen = true;
+    Log.info('连接 MySQL 数据库');
+
     try {
-      final bool isExits = await _isTableExits();
-      if (isExits == false) {
-        connection.execute('''
-        CREATE TABLE $name (
-        $columnId SERIAL PRIMARY KEY,$columnName TEXT NOT NULL,
-        $columnCreateTime INTEGER NOT NULL,$columnUpdateTime INTEGER NOT NULL,
-        $columnImage TEXT NOT NULL);
+      await connection!.query('''
+        CREATE TABLE IF NOT EXISTS `$name` (
+          `$columnId` INT AUTO_INCREMENT PRIMARY KEY,
+          `$columnName` TEXT NOT NULL,
+          `$columnCreateTime` BIGINT NOT NULL,
+          `$columnUpdateTime` BIGINT NOT NULL,
+          `$columnImage` TEXT NOT NULL,
+          `$columnPasswordHash` TEXT
+        ) DEFAULT CHARSET=utf8mb4;
       ''');
-      }
+      await _ensureColumn(columnPasswordHash, 'TEXT');
     } catch (e, s) {
+      _isOpen = false;
       Log.error(e, stackTrace: s);
       rethrow;
     }
   }
 
-  static Future<bool> _isTableExits() async {
-    final List<Map<String, Map<String, dynamic>>> result =
-        await connection.mappedResultsQuery('select * from $name');
-    return result != null;
+  static Future<void> _ensureColumn(String column, String type) async {
+    final Results result = await connection!.query(
+      '''
+      SELECT COUNT(*)
+      FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = ?
+        AND TABLE_NAME = ?
+        AND COLUMN_NAME = ?
+      ''',
+      <Object?>[DbGlobal.database, name, column],
+    );
+    if (result.first[0] == 0) {
+      await connection!.query('ALTER TABLE `$name` ADD COLUMN `$column` $type');
+    }
+  }
+
+  static Future<MySqlConnection> _ensureConnection() async {
+    if (!_isOpen || connection == null) {
+      await init();
+    }
+    return connection!;
   }
 
   static Future<int> getMapList() async {
-    if (connection.isClosed) {
-      await init();
-    }
-    final List<Map<String, Map<String, dynamic>>> result = await connection
-        .mappedResultsQuery('SELECT * FROM $name order by $columnId ASC');
-    return result.length;
+    final MySqlConnection db = await _ensureConnection();
+    final Results result = await db.query('SELECT COUNT(*) FROM `$name`');
+    return result.first[0] as int;
   }
 
-  //添加数据
+  // 添加数据
   static Future<int> addUser(User user) async {
-    if (connection.isClosed) {
-      await init();
+    final MySqlConnection db = await _ensureConnection();
+    final Results result = await db.query(
+      '''
+      INSERT INTO `$name`
+      (`$columnName`, `$columnCreateTime`, `$columnUpdateTime`,
+       `$columnImage`, `$columnPasswordHash`)
+      VALUES (?, ?, ?, ?, ?)
+      ''',
+      <Object?>[
+        user.name,
+        user.createTime,
+        user.updateTime,
+        user.image,
+        user.passwordHash,
+      ],
+    );
+    return result.insertId ?? 0;
+  }
+
+  static Future<User?> findByName(String nameValue) async {
+    final MySqlConnection db = await _ensureConnection();
+    final Results result = await db.query(
+      _selectUserSql('WHERE `$columnName` = ? LIMIT 1'),
+      <Object?>[nameValue],
+    );
+    if (result.isEmpty) {
+      return null;
     }
-    final String sql = insert(name, user.toJson());
-    final int res =
-        await connection.execute(sql, substitutionValues: user.toJson());
-    return res;
+    return _userFromRow(result.first);
+  }
+
+  static Future<User?> loginWithPassword({
+    required String nameValue,
+    required String passwordHash,
+  }) async {
+    final User? user = await findByName(nameValue);
+    if (user == null || user.passwordHash != passwordHash) {
+      return null;
+    }
+    user.updateTime = DateTimeHelper.getLocalTimeStamp() ~/ 1000;
+    await updateUser(user);
+    return user;
   }
 
   static Future<User?> checkUser(User user) async {
-    if (connection.isClosed) {
-      await init();
-    }
-    final List<Map<String, Map<String, dynamic>>> result = await connection
-        .mappedResultsQuery('select * from $name where id = ${user.id}');
+    final MySqlConnection db = await _ensureConnection();
+    final Results result = await db.query(
+      _selectUserSql('WHERE `$columnId` = ? LIMIT 1'),
+      <Object?>[user.id],
+    );
 
-    if (result != null && result.isNotEmpty == true) {
-      final User hasUser = User.fromJson(result[0]['$name']);
-      if (hasUser.name == user.name) {
-        hasUser.updateTime = DateTimeHelper.getLocalTimeStamp() ~/ 1000;
-        updateUser(hasUser);
-        return hasUser;
-      }
-      return null;
-    } else {
+    if (result.isEmpty) {
       return null;
     }
-  }
 
-  //通过id查找user
-  static Future<User?> getOneWithId(int id) async {
-    if (connection.isClosed) {
-      await init();
-    }
-    final List<Map<String, Map<String, dynamic>>> result = await connection
-        .mappedResultsQuery('select * from $name where id = $id');
-
-    if (result != null && result.isNotEmpty == true) {
-      final User hasUser = User.fromJson(result[0]['$name']);
+    final User hasUser = _userFromRow(result.first);
+    final bool passwordMatches = user.passwordHash != null &&
+        user.passwordHash!.isNotEmpty &&
+        user.passwordHash == hasUser.passwordHash;
+    final bool legacyNameMatches =
+        user.passwordHash == null && hasUser.name == user.name;
+    if (passwordMatches || legacyNameMatches) {
+      hasUser.updateTime = DateTimeHelper.getLocalTimeStamp() ~/ 1000;
+      await updateUser(hasUser);
       return hasUser;
-    } else {
-      return null;
     }
+    return null;
   }
 
-  //更新数据
-  static Future<int> updateUser(User user) async {
-    if (connection.isClosed) {
-      await init();
+  // 通过 id 查找 user
+  static Future<User?> getOneWithId(int id) async {
+    final MySqlConnection db = await _ensureConnection();
+    final Results result = await db.query(
+      _selectUserSql('WHERE `$columnId` = ? LIMIT 1'),
+      <Object?>[id],
+    );
+
+    if (result.isEmpty) {
+      return null;
     }
-    final String sql = update(
-        name,
-        user.toJson(),
-        'WHERE $columnId = '
-        '${user.id}');
-    final int res =
-        await connection.execute(sql, substitutionValues: user.toJson());
-    return res;
+    return _userFromRow(result.first);
+  }
+
+  // 更新数据
+  static Future<int> updateUser(User user) async {
+    final MySqlConnection db = await _ensureConnection();
+    final Results result = await db.query(
+      '''
+      UPDATE `$name`
+      SET `$columnName` = ?,
+          `$columnImage` = ?,
+          `$columnCreateTime` = ?,
+          `$columnUpdateTime` = ?,
+          `$columnPasswordHash` = ?
+      WHERE `$columnId` = ?
+      ''',
+      <Object?>[
+        user.name,
+        user.image,
+        user.createTime,
+        user.updateTime,
+        user.passwordHash,
+        user.id,
+      ],
+    );
+    return result.affectedRows ?? 0;
+  }
+
+  static String _selectUserSql(String whereSql) {
+    return '''
+      SELECT `$columnId`, `$columnName`, `$columnImage`,
+             `$columnCreateTime`, `$columnUpdateTime`, `$columnPasswordHash`
+      FROM `$name`
+      $whereSql
+    ''';
+  }
+
+  static User _userFromRow(ResultRow row) {
+    return User(
+      id: row[0] as int?,
+      name: row[1] as String?,
+      image: row[2] as String?,
+      createTime: row[3] as int?,
+      updateTime: row[4] as int?,
+      passwordHash: row[5] as String?,
+    );
   }
 }

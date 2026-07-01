@@ -114,6 +114,8 @@ class AssemblyState extends State<Assembly> {
                   ],
                   routes: <String, WidgetBuilder>{
                     'home': (BuildContext context) => MainIndexPage(),
+                    'subjectDetectorTool': (BuildContext context) =>
+                        const SubjectDetectorToolPage(),
                   },
                   home: GestureDetector(
                     onLongPress: () {

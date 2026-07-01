@@ -2,28 +2,31 @@ part of 'chat_helper.dart';
 
 //消息总管道
 class ChatMsgConduit {
-  static List<MqttReceivedMessage> msgList = <MqttReceivedMessage>[];
+  static List<MqttReceivedMessage<MqttMessage>> msgList =
+      <MqttReceivedMessage<MqttMessage>>[];
 
   static void listener() {
     ChatHelper.client?.updates
         ?.listen((List<MqttReceivedMessage<MqttMessage>> event) {
       final MqttPublishMessage m = event[0].payload as MqttPublishMessage;
-      final String message =
-          MqttPublishPayload.bytesToStringAsString(m.payload.message);
       msgSendCenter(event[0]);
-      Log.info('ChatMsgConduit listener ${event[0].topic} ${utf8.decode(m.payload.message)}');
+      Log.info(
+        'ChatMsgConduit listener ${event[0].topic} '
+        '${utf8.decode(m.payload.message)}',
+      );
     });
   }
 
-  static void msgSendCenter(MqttReceivedMessage event) {
+  static void msgSendCenter(MqttReceivedMessage<MqttMessage> event) {
     msgList.add(event);
     MessageControl.sendMsg(EventChat()..msg = event);
   }
 
   //获取对应topic的记录
-  static List<MqttReceivedMessage> getMsgWithTopic(String topic) {
+  static List<MqttReceivedMessage<MqttMessage>> getMsgWithTopic(String topic) {
     return msgList
-        .where((MqttReceivedMessage element) => element.topic == topic)
+        .where((MqttReceivedMessage<MqttMessage> element) =>
+            element.topic == topic)
         .toList();
   }
 

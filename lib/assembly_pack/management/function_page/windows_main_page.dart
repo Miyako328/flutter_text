@@ -11,6 +11,8 @@ import 'package:flutter_text/models/main_widget_model.dart';
 import 'package:get/get.dart';
 
 const String _remoteBannerApi = 'http://192.168.1.108:18980/index.php';
+const int _remoteBannerCount = 3;
+const int _remoteBannerMaxAttempts = 12;
 
 class WindowsMainPage extends StatefulWidget {
   const WindowsMainPage({Key? key}) : super(key: key);
@@ -137,21 +139,20 @@ class _HeroBannerState extends State<_HeroBanner> {
   }
 
   Future<void> _loadRemoteBanner() async {
-    final List<String> urls = List<String>.generate(
-      3,
-      (int index) => _remoteBannerUrl(index),
-    );
     try {
-      await precacheImage(NetworkImage(urls.first), context)
-          .timeout(const Duration(seconds: 3));
+      final List<ImageModel> landscapeImages = await _loadLandscapeRemoteImages(
+        targetCount: _remoteBannerCount,
+        maxAttempts: _remoteBannerMaxAttempts,
+      );
       if (!mounted) {
+        return;
+      }
+      if (landscapeImages.length < _remoteBannerCount) {
         return;
       }
       setState(() {
         _currentIndex = 0;
-        _remoteImages = urls
-            .map((String url) => ImageModel()..image = url)
-            .toList(growable: false);
+        _remoteImages = landscapeImages;
         _useRemoteImages = true;
       });
       if (_pageController.hasClients) {
@@ -160,6 +161,66 @@ class _HeroBannerState extends State<_HeroBanner> {
     } catch (_) {
       _disableRemoteBanner();
     }
+  }
+
+  Future<List<ImageModel>> _loadLandscapeRemoteImages({
+    required int targetCount,
+    required int maxAttempts,
+  }) async {
+    final ImageConfiguration configuration =
+        createLocalImageConfiguration(context);
+    final List<ImageModel> images = <ImageModel>[];
+
+    for (int index = 0;
+        index < maxAttempts && images.length < targetCount;
+        index++) {
+      final String url = _remoteBannerUrl(index);
+      try {
+        final Size size = await _resolveImageSize(
+          NetworkImage(url),
+          configuration,
+        ).timeout(const Duration(seconds: 3));
+        if (size.width > size.height) {
+          images.add(ImageModel()..image = url);
+        }
+      } catch (_) {
+        // Ignore a single bad candidate and keep checking the rest.
+      }
+    }
+
+    return images;
+  }
+
+  Future<Size> _resolveImageSize(
+    ImageProvider imageProvider,
+    ImageConfiguration configuration,
+  ) {
+    final Completer<Size> completer = Completer<Size>();
+    final ImageStream stream = imageProvider.resolve(configuration);
+    late final ImageStreamListener listener;
+
+    listener = ImageStreamListener(
+      (ImageInfo imageInfo, bool synchronousCall) {
+        if (!completer.isCompleted) {
+          completer.complete(
+            Size(
+              imageInfo.image.width.toDouble(),
+              imageInfo.image.height.toDouble(),
+            ),
+          );
+        }
+        stream.removeListener(listener);
+      },
+      onError: (Object error, StackTrace? stackTrace) {
+        if (!completer.isCompleted) {
+          completer.completeError(error, stackTrace);
+        }
+        stream.removeListener(listener);
+      },
+    );
+
+    stream.addListener(listener);
+    return completer.future;
   }
 
   String _remoteBannerUrl(int index) {

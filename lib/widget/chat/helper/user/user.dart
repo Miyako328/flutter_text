@@ -10,8 +10,16 @@ class User {
   String? image;
   int? createTime;
   int? updateTime;
+  String? passwordHash;
 
-  User({this.id, this.name, this.image, this.createTime, this.updateTime});
+  User({
+    this.id,
+    this.name,
+    this.image,
+    this.createTime,
+    this.updateTime,
+    this.passwordHash,
+  });
 
   User.fromJson(dynamic json) {
     id = json['id'];
@@ -19,21 +27,23 @@ class User {
     image = json['image'];
     createTime = json['createtime'];
     updateTime = json['updatetime'];
+    passwordHash = json['passwordHash'] ?? json['passwordhash'];
   }
 
   Map<String, dynamic> toJson() {
-    var map = <String, dynamic>{};
+    final Map<String, dynamic> map = <String, dynamic>{};
     map['id'] = id;
     map['name'] = name;
     map['image'] = image;
     map['createTime'] = createTime;
     map['updateTime'] = updateTime;
+    map['passwordHash'] = passwordHash;
     return map;
   }
 
-  static List<User> listFromJson(List<dynamic> json) {
+  static List<User> listFromJson(List<dynamic>? json) {
     return json == null
         ? <User>[]
-        : json.map((e) => User.fromJson(e)).toList();
+        : json.map((dynamic e) => User.fromJson(e)).toList();
   }
 }

@@ -1,13 +1,13 @@
 import 'package:mqtt_client/mqtt_client.dart';
 
 class EventChat {
-  MqttReceivedMessage? msg;
+  MqttReceivedMessage<MqttMessage>? msg;
 }
 
 class DbGlobal {
-  static String ip = '47.102.41.197';
-  static int port = 5433;
-  static String database = 'db4d3c49473a7e4472961204b7a3838a5euser';
-  static String username = 'nayo';
-  static String password = 'Lix690575679';
+  static String ip = '192.168.1.108';
+  static int port = 18199;
+  static String database = 'flutter_text';
+  static String username = 'flutter_text';
+  static String password = 'LJcdfbjA2mR8m7m2';
 }

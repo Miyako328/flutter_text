@@ -144,41 +144,57 @@ class _CapsuleDock extends StatelessWidget {
 
         final bool isBottom =
             shellController.dockPosition == DockPosition.bottom;
+        final bool useCompactBackMode = isBottom && shellController.canGoBack;
         return AnimatedAlign(
           duration: const Duration(milliseconds: 220),
           curve: Curves.easeOut,
-          alignment: isBottom ? Alignment.bottomCenter : Alignment.centerLeft,
+          alignment: useCompactBackMode
+              ? Alignment.bottomLeft
+              : isBottom
+                  ? Alignment.bottomCenter
+                  : Alignment.centerLeft,
           child: Padding(
-            padding: isBottom
-                ? const EdgeInsets.only(bottom: 18)
-                : const EdgeInsets.only(left: 18),
+            padding: useCompactBackMode
+                ? const EdgeInsets.only(left: 18, bottom: 18)
+                : isBottom
+                    ? const EdgeInsets.only(bottom: 18)
+                    : const EdgeInsets.only(left: 18),
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 180),
               switchInCurve: Curves.easeOut,
               switchOutCurve: Curves.easeIn,
-              child: shellController.isDockVisible
-                  ? MouseRegion(
-                      key: const ValueKey<String>('dock'),
-                      onEnter: (_) {
+              child: useCompactBackMode
+                  ? _DockBackButton(
+                      key: const ValueKey<String>('compact-dock-back-button'),
+                      onTap: () {
                         shellController.registerDockActivity();
+                        controller.goBack();
                       },
-                      child: _DockCluster(
-                        entries: entries,
-                        current: shellController.currentKey,
-                        direction: isBottom ? Axis.horizontal : Axis.vertical,
-                        canGoBack: shellController.canGoBack,
-                        onBack: () {
-                          shellController.registerDockActivity();
-                          controller.goBack();
-                        },
-                      ),
                     )
-                  : _DockHandle(
-                      key: const ValueKey<String>('dock-handle'),
-                      direction: isBottom ? Axis.horizontal : Axis.vertical,
-                      revealMode: shellController.dockRevealMode,
-                      onReveal: shellController.revealDock,
-                    ),
+                  : shellController.isDockVisible
+                      ? MouseRegion(
+                          key: const ValueKey<String>('dock'),
+                          onEnter: (_) {
+                            shellController.registerDockActivity();
+                          },
+                          child: _DockCluster(
+                            entries: entries,
+                            current: shellController.currentKey,
+                            direction:
+                                isBottom ? Axis.horizontal : Axis.vertical,
+                            canGoBack: shellController.canGoBack,
+                            onBack: () {
+                              shellController.registerDockActivity();
+                              controller.goBack();
+                            },
+                          ),
+                        )
+                      : _DockHandle(
+                          key: const ValueKey<String>('dock-handle'),
+                          direction: isBottom ? Axis.horizontal : Axis.vertical,
+                          revealMode: shellController.dockRevealMode,
+                          onReveal: shellController.revealDock,
+                        ),
             ),
           ),
         );

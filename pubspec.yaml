@@ -48,7 +48,7 @@ dependencies:
   call: ^0.3.0 #用于windows dll
   flutter_intro: ^2.3.0 #页面指引
   ota_update: ^3.0.2 #下载更新
-  postgres: ^2.4.3 #数据库
+  mysql1: ^0.20.0 #数据库
   k_chart: ^0.7.0 #折线图
   cached_network_image: ^3.1.0 #图片缓存
   syncfusion_flutter_charts: ^20.2.43 #折线图
@@ -102,6 +102,7 @@ dependencies:
   json_annotation: ^4.9.0
   dio: ^5.8.0
   retrofit: ^4.6.0
+  crypto: ^3.0.3
 
 # dart run build_runner build 生成json模型
 dev_dependencies:

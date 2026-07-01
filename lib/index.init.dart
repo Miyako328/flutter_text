@@ -629,7 +629,15 @@ List<MainWidgetModel> page3 = <MainWidgetModel>[
   ),
 ];
 
-List<MainWidgetModel> page4 = [
+List<MainWidgetModel> page4 = <MainWidgetModel>[
+  MainWidgetModel(
+    title: 'Subject 主体识别',
+    route: const SubjectDetectorToolPage(),
+    icon: const Icon(Icons.image_search_outlined),
+    category: '桌面与系统能力',
+    description: '导入一张图片，使用 macOS Vision 识别主体并框出主体区域。',
+    tags: <String>['Subject', '主体识别', 'macOS', 'Vision', '图片'],
+  ),
   MainWidgetModel(
     title: '组件能力库',
     route: const ComponentLibraryPage(),
