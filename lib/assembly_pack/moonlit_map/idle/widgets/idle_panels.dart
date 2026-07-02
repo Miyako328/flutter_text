@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_text/gen/assets.gen.dart';
 
 import '../flame/idle_expedition_game.dart';
 import '../idle_models.dart';
@@ -138,53 +139,259 @@ class IdleExpeditionMapPanel extends StatelessWidget {
       ),
       child: SizedBox(
         height: 320,
-        child: Stack(
-          children: <Widget>[
-            Positioned.fill(
-              child: IdleExpeditionGameView(
-                state: state,
-                onHeroTap: onHeroTap,
-                onCampTap: onCampTap,
-                onRouteTap: onRouteTap,
-                onUnavailableTap: onUnavailableTap,
-              ),
-            ),
-            Positioned(
-              left: 16,
-              top: 14,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '南境裂谷与暮色镇',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: const Color(0xffffe7bf),
-                          fontWeight: FontWeight.w700,
-                        ),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            final Size mapSize = Size(
+              constraints.maxWidth,
+              constraints.maxHeight,
+            );
+            final Offset heroPosition = _heroPosition(mapSize);
+            final bool exploring = state.activeExpedition != null &&
+                state.activeExpedition!.liveCanClaim == false;
+            return Stack(
+              children: <Widget>[
+                Positioned.fill(
+                  child: IdleExpeditionGameView(
+                    state: state,
+                    onHeroTap: onHeroTap,
+                    onCampTap: onCampTap,
+                    onRouteTap: onRouteTap,
+                    onUnavailableTap: onUnavailableTap,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    state.activeExpedition == null
-                        ? '选择一条路线派出远征'
-                        : '远征中 · ${state.activeExpedition!.routeName}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: const Color(0xffd7c7a7),
-                        ),
+                ),
+                Positioned(
+                  left: heroPosition.dx - 52,
+                  top: heroPosition.dy - 118,
+                  child: _SylviaHeroButton(
+                    running: exploring,
+                    onTap: onHeroTap,
                   ),
-                ],
-              ),
-            ),
-            Positioned(
-              right: 14,
-              bottom: 12,
-              child: _MapLegend(
-                unlocked:
-                    state.stageByKey('maclay_ruins_deep')?.unlocked == true,
-              ),
-            ),
-          ],
+                ),
+                Positioned(
+                  left: 16,
+                  top: 14,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '南境裂谷与暮色镇',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: const Color(0xffffe7bf),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        state.activeExpedition == null
+                            ? '选择一条路线派出远征'
+                            : '远征中 · ${state.activeExpedition!.routeName}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: const Color(0xffd7c7a7),
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  right: 14,
+                  bottom: 12,
+                  child: _MapLegend(
+                    unlocked:
+                        state.stageByKey('maclay_ruins_deep')?.unlocked == true,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
+    );
+  }
+
+  Offset _heroPosition(Size size) {
+    final MoonlitExpedition? expedition = state.activeExpedition;
+    if (expedition == null) {
+      return Offset(size.width * 0.28, size.height * 0.62);
+    }
+
+    final int index = _mapRouteNodes.indexWhere(
+      (_MapRouteNode node) => node.key == expedition.routeKey,
+    );
+    if (index < 0) {
+      return Offset(size.width * 0.28, size.height * 0.62);
+    }
+
+    final Offset start = _scale(_mapRouteNodes[index].position, size);
+    final Offset end = _scale(
+      _mapRouteNodes[(index + 1).clamp(0, _mapRouteNodes.length - 1)].position,
+      size,
+    );
+    return Offset.lerp(start, end, expedition.currentProgress)!;
+  }
+
+  Offset _scale(Offset value, Size size) {
+    return Offset(value.dx * size.width, value.dy * size.height);
+  }
+}
+
+const List<_MapRouteNode> _mapRouteNodes = <_MapRouteNode>[
+  _MapRouteNode('twilight_investigation', Offset(0.16, 0.65)),
+  _MapRouteNode('forest_edge_patrol', Offset(0.40, 0.45)),
+  _MapRouteNode('old_road_ruin_search', Offset(0.63, 0.58)),
+  _MapRouteNode('maclay_ruins_deep', Offset(0.84, 0.34)),
+];
+
+class _MapRouteNode {
+  const _MapRouteNode(this.key, this.position);
+
+  final String key;
+  final Offset position;
+}
+
+class _SylviaHeroButton extends StatefulWidget {
+  const _SylviaHeroButton({
+    required this.running,
+    required this.onTap,
+  });
+
+  final bool running;
+  final VoidCallback onTap;
+
+  @override
+  State<_SylviaHeroButton> createState() => _SylviaHeroButtonState();
+}
+
+class _SylviaHeroButtonState extends State<_SylviaHeroButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 760),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: widget.onTap,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (BuildContext context, Widget? _) {
+          final double wave = _controller.value < 0.5
+              ? _controller.value * 2
+              : (1 - _controller.value) * 2;
+          final double dy = widget.running ? 0 : -3 + (wave * 6);
+          return Transform.translate(
+            offset: Offset(0, dy),
+            child: _buildBody(),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    final int frame = (_controller.value * 8).floor().clamp(0, 7);
+    return SizedBox(
+      width: 104,
+      height: 132,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: <Widget>[
+          Positioned(
+            bottom: 12,
+            child: Container(
+              width: widget.running ? 70 : 62,
+              height: 16,
+              decoration: const BoxDecoration(
+                color: Color(0x88000000),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          widget.running
+              ? _buildRunFrame(frame)
+              : _buildImage(
+                  Assets.imagesSylviaSylviaIdle,
+                ),
+          const Positioned(
+            bottom: 0,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Color(0xcc211d23),
+                borderRadius: BorderRadius.all(Radius.circular(6)),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Text(
+                  '希尔薇娅',
+                  style: TextStyle(
+                    color: Color(0xffffe7bf),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRunFrame(int frame) {
+    switch (frame) {
+      case 0:
+        return _buildImage(Assets.imagesSylviaRunRun0);
+      case 1:
+        return _buildImage(Assets.imagesSylviaRunRun1);
+      case 2:
+        return _buildImage(Assets.imagesSylviaRunRun2);
+      case 3:
+        return _buildImage(Assets.imagesSylviaRunRun3);
+      case 4:
+        return _buildImage(Assets.imagesSylviaRunRun4);
+      case 5:
+        return _buildImage(Assets.imagesSylviaRunRun5);
+      case 6:
+        return _buildImage(Assets.imagesSylviaRunRun6);
+      default:
+        return _buildImage(Assets.imagesSylviaRunRun7);
+    }
+  }
+
+  Widget _buildImage(AssetGenImage image) {
+    return image.image(
+      width: 104,
+      height: 108,
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) {
+        return Container(
+          width: 96,
+          height: 104,
+          decoration: const BoxDecoration(
+            color: Color(0xffffd27d),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.person,
+            color: Color(0xff43241f),
+            size: 42,
+          ),
+        );
+      },
     );
   }
 }

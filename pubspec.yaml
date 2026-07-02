@@ -129,5 +129,7 @@ flutter:
     - assets/data/
     - assets/dll/
     - assets/images/
+    - assets/images/sylvia/
+    - assets/images/sylvia/run/
     - assets/images/human/
     - assets/banner/

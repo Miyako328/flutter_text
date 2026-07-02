@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -143,7 +142,6 @@ class _IdleExpeditionScene extends Component
   _IdleExpeditionScene(this._state);
 
   MoonlitIdleState _state;
-  ui.Image? _heroSheet;
   double _time = 0;
 
   static const List<_ExpeditionNode> _nodes = <_ExpeditionNode>[
@@ -178,15 +176,6 @@ class _IdleExpeditionScene extends Component
   }
 
   @override
-  Future<void> onLoad() async {
-    try {
-      _heroSheet = await game.images.load('sylvia/spritesheet.webp');
-    } catch (_) {
-      _heroSheet = null;
-    }
-  }
-
-  @override
   void update(double dt) {
     _time += dt;
   }
@@ -202,8 +191,6 @@ class _IdleExpeditionScene extends Component
     _paintTerrain(canvas, size);
     _paintRoute(canvas, size);
     _paintNodes(canvas, size);
-    _paintHero(canvas, size);
-    _paintParty(canvas, size);
     _paintCornerStatus(canvas, size);
   }
 
@@ -382,107 +369,6 @@ class _IdleExpeditionScene extends Component
         locked,
       );
     }
-  }
-
-  void _paintParty(Canvas canvas, Size size) {
-    final MoonlitExpedition? expedition = _state.activeExpedition;
-    if (expedition == null) {
-      return;
-    }
-
-    final int index = _nodes.indexWhere(
-      (_ExpeditionNode node) => node.key == expedition.routeKey,
-    );
-    if (index < 0) {
-      return;
-    }
-
-    final Offset start = _scale(_nodes[index].position, size);
-    final Offset end = _scale(
-      _nodes[(index + 1).clamp(0, _nodes.length - 1)].position,
-      size,
-    );
-    final Offset current = Offset.lerp(start, end, expedition.currentProgress)!;
-    final double bob = math.sin(_time * 7) * 2;
-
-    canvas.drawCircle(
-      current + Offset(0, 7 + bob.abs()),
-      11,
-      Paint()..color = const Color(0x99000000),
-    );
-    canvas.drawCircle(
-      current + Offset(0, bob),
-      10,
-      Paint()..color = const Color(0xffd64a3d),
-    );
-    canvas.drawCircle(
-      current + Offset(0, bob),
-      4,
-      Paint()..color = const Color(0xffffe7bf),
-    );
-    _paintLabel(
-      canvas,
-      expedition.liveCanClaim ? '归队' : '远征队',
-      current + Offset(0, -32 + bob),
-      true,
-      false,
-    );
-  }
-
-  void _paintHero(Canvas canvas, Size size) {
-    final Offset feet = Offset(size.width * 0.28, size.height * 0.62);
-    final double bob = math.sin(_time * 2.2) * 2;
-    final ui.Image? sheet = _heroSheet;
-
-    canvas.drawOval(
-      Rect.fromCenter(
-        center: feet + const Offset(0, 7),
-        width: 64,
-        height: 18,
-      ),
-      Paint()..color = const Color(0x88000000),
-    );
-
-    if (sheet != null) {
-      final Rect src = Rect.fromLTWH(
-        0,
-        0,
-        sheet.width / 8,
-        sheet.height / 9,
-      );
-      final Rect dst = Rect.fromCenter(
-        center: feet + Offset(0, -55 + bob),
-        width: 96,
-        height: 104,
-      );
-      canvas.drawImageRect(sheet, src, dst, Paint());
-    } else {
-      canvas.drawCircle(
-        feet + Offset(0, -36 + bob),
-        30,
-        Paint()..color = const Color(0xffffd27d),
-      );
-      canvas.drawCircle(
-        feet + Offset(0, -36 + bob),
-        22,
-        Paint()..color = const Color(0xffd64a3d),
-      );
-      _paintIcon(
-        canvas,
-        Icons.person,
-        feet + Offset(0, -36 + bob),
-        true,
-        false,
-      );
-    }
-
-    _paintLabel(
-      canvas,
-      '希尔薇娅',
-      feet + Offset(0, 16 + bob),
-      true,
-      false,
-    );
   }
 
   void _paintCornerStatus(Canvas canvas, Size size) {
