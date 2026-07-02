@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_text/assembly_pack/chat_self/user_change/view.dart';
 import 'package:flutter_text/assembly_pack/chat_self/user_login/view.dart';
-import 'package:flutter_text/assembly_pack/management/function_page/windows_search_page.dart';
 import 'package:flutter_text/assembly_pack/management/home_page/home_shell_controller.dart';
 import 'package:flutter_text/init.dart';
 import 'package:get/get.dart';
@@ -171,6 +170,12 @@ class _EditorTopBar extends StatelessWidget {
                   context,
                   UserLoginPage(),
                   title: '登陆',
+                );
+              } else {
+                WindowsNavigator().pushWidget(
+                  context,
+                  UserChangePage(),
+                  title: '我的资料',
                 );
               }
             },

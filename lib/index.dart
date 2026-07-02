@@ -1,5 +1,7 @@
 import 'package:flutter_text/assembly_pack/webRTC/get_display_media.dart';
 import 'package:flutter_text/assembly_pack/webRTC/get_user_media.dart';
+import 'package:flutter_text/assembly_pack/moonlit_map/moonlit_map_page.dart';
+import 'package:flutter_text/assembly_pack/moonlit_map/moonlit_idle_page.dart';
 import 'package:self_utils/generated/l10n.dart';
 import 'assembly_pack/layout_teach/study_center.dart';
 import 'assembly_pack/webRTC/call_sample.dart';

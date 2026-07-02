@@ -138,10 +138,32 @@ class _SearchResultList extends StatelessWidget {
                     item.icon,
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        item.displayTitle,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            item.displayTitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _subtitle(item),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.56,
+                                      ),
+                                    ),
+                          ),
+                        ],
                       ),
                     ),
                     const Icon(Icons.chevron_right),
@@ -153,5 +175,17 @@ class _SearchResultList extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _subtitle(MainWidgetModel item) {
+    final List<String> values = <String>[
+      if (item.category?.isNotEmpty == true) item.category!,
+      if (item.description?.isNotEmpty == true) item.description!,
+      if (item.tags.isNotEmpty) item.tags.take(3).join(' / '),
+    ];
+    if (values.isEmpty) {
+      return '点击打开';
+    }
+    return values.join(' · ');
   }
 }

@@ -205,12 +205,41 @@ class PostgresUser {
 
   static User _userFromRow(ResultRow row) {
     return User(
-      id: row[0] as int?,
-      name: row[1] as String?,
-      image: row[2] as String?,
-      createTime: row[3] as int?,
-      updateTime: row[4] as int?,
-      passwordHash: row[5] as String?,
+      id: _readInt(row[0]),
+      name: _readString(row[1]),
+      image: _readString(row[2]),
+      createTime: _readInt(row[3]),
+      updateTime: _readInt(row[4]),
+      passwordHash: _readString(row[5]),
     );
+  }
+
+  static String? _readString(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is String) {
+      return value;
+    }
+    if (value is Blob) {
+      return value.toString();
+    }
+    if (value is List<int>) {
+      return Blob.fromBytes(value).toString();
+    }
+    return value.toString();
+  }
+
+  static int? _readInt(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is int) {
+      return value;
+    }
+    if (value is num) {
+      return value.toInt();
+    }
+    return int.tryParse(_readString(value) ?? '');
   }
 }

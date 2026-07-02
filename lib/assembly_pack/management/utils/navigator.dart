@@ -44,8 +44,12 @@ class WindowsNavigator extends NavigatorUtils {
 
   void pop(BuildContext context) {
     if (!GlobalStore.isMobile) {
-      final TabPage lastOne = c.tabs.last;
-      c.close(lastOne.key);
+      final TabPage? current = c.current;
+      if (current != null) {
+        c.close(current.key);
+      } else if (c.tabs.isNotEmpty) {
+        c.close(c.tabs.last.key);
+      }
     } else {
       Navigator.of(context).pop();
     }

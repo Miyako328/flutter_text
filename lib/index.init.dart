@@ -1,6 +1,22 @@
 part of 'index.dart';
 
 List<MainWidgetModel> page1 = <MainWidgetModel>[
+  MainWidgetModel(
+    title: '月下地图册',
+    route: const MoonlitMapPage(),
+    icon: const Icon(Icons.map_outlined),
+    category: '小说资料库',
+    description: '从 NAS 读取地图和点位，查看《月下，她与她的长夜》的互动地图。',
+    tags: const <String>['月下', '地图', '小说', '资料库', 'moonlit', 'NAS'],
+  ),
+  MainWidgetModel(
+    title: '月下远征',
+    route: const MoonlitIdlePage(),
+    icon: const Icon(Icons.explore_outlined),
+    category: '小说资料库',
+    description: '暮色镇周边探索、线索收集与局外养成。',
+    tags: const <String>['月下', '远征', '放置', '暮色镇', '玛克莱', 'idle'],
+  ),
   // MainWidgetModel(
   //   title: '聊天室--',
   //   route: ChatPackApp(),

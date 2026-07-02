@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_text/assembly_pack/chat_self/user_register/view.dart';
+import 'package:flutter_text/assembly_pack/management/utils/navigator.dart';
 import 'package:flutter_text/global/global.dart';
 import 'package:get/get.dart';
 
@@ -29,7 +30,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     child: GestureDetector(
                       child: const Text('注册'),
                       onTap: () {
-                        Get.to(() => UserRegisterPage());
+                        _openRegister(context);
                       },
                     ),
                   ),
@@ -97,7 +98,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               '登陆',
                             ),
                             onPressed: () {
-                              logic.onLogin();
+                              logic.onLogin(context);
                             },
                           ),
                         )
@@ -117,7 +118,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               '注册',
                             ),
                             onPressed: () {
-                              Get.to(() => UserRegisterPage());
+                              _openRegister(context);
                             },
                           ),
                         )
@@ -137,5 +138,17 @@ class _UserLoginPageState extends State<UserLoginPage> {
   void dispose() {
     Get.delete<UserLoginLogic>();
     super.dispose();
+  }
+
+  void _openRegister(BuildContext context) {
+    if (GlobalStore.isMobile) {
+      Get.to(() => UserRegisterPage());
+    } else {
+      WindowsNavigator().pushWidget(
+        context,
+        UserRegisterPage(),
+        title: '注册',
+      );
+    }
   }
 }

@@ -1,17 +1,20 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../assembly_pack/get_builder_test/get_builder_test_page.dart';
+import '../assembly_pack/moonlit_map/moonlit_idle_page.dart';
+import '../assembly_pack/moonlit_map/moonlit_map_page.dart';
 import '../models/main_widget_model.dart';
 
-class MainController extends GetxController with GetSingleTickerProviderStateMixin {
+class MainController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   late TabController tabController;
   RxInt currentIndex = 0.obs;
   RxInt tapTimes = 0.obs;
   RxString? eventData = ''.obs;
-  
-  List<MainWidgetModel> page1 = [];
-  List<MainWidgetModel> page2 = [];
-  List<MainWidgetModel> page3 = [];
+
+  List<MainWidgetModel> page1 = <MainWidgetModel>[];
+  List<MainWidgetModel> page2 = <MainWidgetModel>[];
+  List<MainWidgetModel> page3 = <MainWidgetModel>[];
 
   @override
   void onInit() {
@@ -56,6 +59,16 @@ class MainController extends GetxController with GetSingleTickerProviderStateMix
 // 从index.init.dart中提取页面数据的方法
 List<MainWidgetModel> getPage1() {
   return <MainWidgetModel>[
+    MainWidgetModel(
+      title: '月下地图册',
+      route: const MoonlitMapPage(),
+      icon: const Icon(Icons.map_outlined),
+    ),
+    MainWidgetModel(
+      title: '月下远征',
+      route: const MoonlitIdlePage(),
+      icon: const Icon(Icons.explore_outlined),
+    ),
     MainWidgetModel(
       title: 'chatGpt--',
       route: null, // 暂时设为null，避免导入错误
@@ -537,4 +550,4 @@ List<MainWidgetModel> getPage3() {
       icon: const Icon(Icons.input),
     ),
   ];
-} 
+}

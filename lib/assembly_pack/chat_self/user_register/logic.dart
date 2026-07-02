@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_text/assembly_pack/management/utils/navigator.dart';
+import 'package:flutter_text/global/global.dart';
 import 'package:self_utils/utils/datetime_utils.dart';
 import 'package:self_utils/utils/log_utils.dart';
 import 'package:self_utils/utils/toast_utils.dart';
@@ -14,7 +16,7 @@ import 'state.dart';
 class UserRegisterLogic extends GetxController {
   final UserRegisterState state = UserRegisterState();
 
-  Future<void> onRegister() async {
+  Future<void> onRegister(BuildContext context) async {
     final FormState? from = state.formKey.currentState;
     if (from != null && from.validate()) {
       from.save();
@@ -34,8 +36,12 @@ class UserRegisterLogic extends GetxController {
       try {
         await PostgresUser.addUser(user);
         ToastUtils.showToast(msg: '注册成功，正在跳转中');
-        int i = 2;
-        Navigator.popUntil(Get.context!, (_) => i-- == 0);
+        if (GlobalStore.isMobile) {
+          int i = 2;
+          Navigator.popUntil(context, (_) => i-- == 0);
+        } else {
+          WindowsNavigator().pop(context);
+        }
       } catch (error, stack) {
         Log.error(error, stackTrace: stack);
         rethrow;

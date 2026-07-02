@@ -77,7 +77,7 @@ class _UserRegisterPageState extends State<UserRegisterPage> {
                         '注册',
                       ),
                       onPressed: () {
-                        logic.onRegister();
+                        logic.onRegister(context);
                       },
                     ),
                   )
