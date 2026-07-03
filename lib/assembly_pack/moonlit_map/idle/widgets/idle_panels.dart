@@ -148,6 +148,7 @@ class IdleExpeditionMapPanel extends StatelessWidget {
             final Offset heroPosition = _heroPosition(mapSize);
             final bool exploring = state.activeExpedition != null &&
                 state.activeExpedition!.liveCanClaim == false;
+            final MoonlitActiveEncounter? encounter = state.activeEncounter;
             return Stack(
               children: <Widget>[
                 Positioned.fill(
@@ -167,6 +168,25 @@ class IdleExpeditionMapPanel extends StatelessWidget {
                     onTap: onHeroTap,
                   ),
                 ),
+                if (encounter != null)
+                  Positioned(
+                    left: (heroPosition.dx + 34).clamp(
+                      12,
+                      mapSize.width - 76,
+                    ),
+                    top: (heroPosition.dy - 92).clamp(
+                      58,
+                      mapSize.height - 118,
+                    ),
+                    child: _MonsterMarker(encounter: encounter),
+                  ),
+                if (encounter != null)
+                  Positioned(
+                    left: 12,
+                    right: 12,
+                    bottom: 12,
+                    child: _LiveBattleOverlay(encounter: encounter),
+                  ),
                 Positioned(
                   left: 16,
                   top: 14,
@@ -193,14 +213,16 @@ class IdleExpeditionMapPanel extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  right: 14,
-                  bottom: 12,
-                  child: _MapLegend(
-                    unlocked:
-                        state.stageByKey('maclay_ruins_deep')?.unlocked == true,
+                if (encounter == null)
+                  Positioned(
+                    right: 14,
+                    bottom: 12,
+                    child: _MapLegend(
+                      unlocked:
+                          state.stageByKey('maclay_ruins_deep')?.unlocked ==
+                              true,
+                    ),
                   ),
-                ),
               ],
             );
           },
@@ -392,6 +414,189 @@ class _SylviaHeroButtonState extends State<_SylviaHeroButton>
           ),
         );
       },
+    );
+  }
+}
+
+class _MonsterMarker extends StatelessWidget {
+  const _MonsterMarker({required this.encounter});
+
+  final MoonlitActiveEncounter encounter;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: const Color(0xee3a1f22),
+        shape: BoxShape.circle,
+        border: Border.all(color: _MoonlitColors.red, width: 2),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+            color: Color(0x99000000),
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
+      ),
+      child: SizedBox(
+        width: 64,
+        height: 64,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.warning_amber_rounded,
+              color: _MoonlitColors.gold,
+              size: 28,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Text(
+                encounter.monster.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: _MoonlitColors.text,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LiveBattleOverlay extends StatelessWidget {
+  const _LiveBattleOverlay({required this.encounter});
+
+  final MoonlitActiveEncounter encounter;
+
+  @override
+  Widget build(BuildContext context) {
+    return _GamePanel(
+      padding: const EdgeInsets.all(12),
+      highlight: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              const _GameIconSeal(
+                icon: Icons.local_fire_department_outlined,
+                active: true,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '遭遇 ${encounter.monster.name}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: _MoonlitColors.text,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${encounter.resultLabel} · 胜率 ${encounter.winPercent}%',
+                      style: const TextStyle(
+                        color: _MoonlitColors.gold,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                '${encounter.playerPower} / ${encounter.monsterThreat}',
+                style: const TextStyle(
+                  color: _MoonlitColors.muted,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _BattleHpRow(
+            label: '希尔薇娅',
+            value: encounter.playerHpRatio,
+            color: _MoonlitColors.green,
+          ),
+          const SizedBox(height: 6),
+          _BattleHpRow(
+            label: encounter.monster.name,
+            value: encounter.monsterHpRatio,
+            color: _MoonlitColors.red,
+          ),
+          if (encounter.monster.battleText.isNotEmpty) ...<Widget>[
+            const SizedBox(height: 8),
+            Text(
+              encounter.monster.battleText,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: _MoonlitColors.muted,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _BattleHpRow extends StatelessWidget {
+  const _BattleHpRow({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  final String label;
+  final double value;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 58,
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: _MoonlitColors.muted,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: value,
+              minHeight: 8,
+              backgroundColor: const Color(0xff332934),
+              color: color,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -617,6 +822,204 @@ class IdleActiveExpeditionPanel extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class IdleBattleReportSheet extends StatelessWidget {
+  const IdleBattleReportSheet({
+    required this.result,
+    super.key,
+  });
+
+  final MoonlitClaimResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.86,
+        ),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
+          shrinkWrap: true,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                const _GameIconSeal(
+                  icon: Icons.assignment_outlined,
+                  active: true,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    result.resultTitle.isEmpty ? '远征战报' : result.resultTitle,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: _MoonlitColors.text,
+                          fontWeight: FontWeight.w800,
+                        ),
+                  ),
+                ),
+                IconButton(
+                  tooltip: '关闭',
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.close,
+                    color: _MoonlitColors.gold,
+                  ),
+                ),
+              ],
+            ),
+            if (result.resultContent.isNotEmpty) ...<Widget>[
+              const SizedBox(height: 10),
+              Text(
+                result.resultContent,
+                style: const TextStyle(color: _MoonlitColors.muted),
+              ),
+            ],
+            const SizedBox(height: 14),
+            _GamePanel(
+              padding: const EdgeInsets.all(12),
+              highlight: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const IdleSectionTitle(
+                    icon: Icons.inventory_2_outlined,
+                    title: '本次收获',
+                    subtitle: '战斗表现会影响最终掉落数量',
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: result.rewards.isEmpty
+                        ? const <Widget>[
+                            _GameResourceChip(label: '没有获得资源', enough: false),
+                          ]
+                        : result.rewards
+                            .map(
+                              (MoonlitClaimReward reward) => _GameResourceChip(
+                                label: '${reward.name} +${reward.amount}',
+                                enough: true,
+                              ),
+                            )
+                            .toList(),
+                  ),
+                  if (result.rewardFactor > 0) ...<Widget>[
+                    const SizedBox(height: 10),
+                    Text(
+                      '收益倍率 x${result.rewardFactor.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        color: _MoonlitColors.gold,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            const IdleSectionTitle(
+              icon: Icons.local_fire_department_outlined,
+              title: '遭遇记录',
+              subtitle: '怪物越强，越能检验当前局外养成强度',
+            ),
+            const SizedBox(height: 8),
+            if (result.battleLogs.isEmpty)
+              const _GamePanel(
+                padding: EdgeInsets.all(12),
+                child: Text(
+                  '这次探索没有遭遇魔物。',
+                  style: TextStyle(color: _MoonlitColors.muted),
+                ),
+              )
+            else
+              for (final MoonlitBattleLog log in result.battleLogs)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: _BattleLogTile(log: log),
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BattleLogTile extends StatelessWidget {
+  const _BattleLogTile({required this.log});
+
+  final MoonlitBattleLog log;
+
+  @override
+  Widget build(BuildContext context) {
+    return _GamePanel(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              _GameIconSeal(
+                icon: _iconForResult(log.resultLabel),
+                active: true,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '${log.encounterIndex}. ${log.monsterName}',
+                      style: const TextStyle(
+                        color: _MoonlitColors.text,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      '${log.resultLabel} · 胜率 ${log.winPercent}%',
+                      style: const TextStyle(
+                        color: _MoonlitColors.gold,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                '${log.playerPower} / ${log.monsterThreat}',
+                style: const TextStyle(
+                  color: _MoonlitColors.muted,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            log.logText,
+            style: const TextStyle(color: _MoonlitColors.muted),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _iconForResult(String label) {
+    if (label.contains('险')) {
+      return Icons.warning_amber_outlined;
+    }
+
+    if (label.contains('苦')) {
+      return Icons.shield_outlined;
+    }
+
+    return Icons.flash_on_outlined;
   }
 }
 

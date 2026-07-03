@@ -89,6 +89,46 @@ class _MoonlitIdlePageState extends State<MoonlitIdlePage> {
     }
   }
 
+  Future<void> _claim() async {
+    if (_busy) {
+      return;
+    }
+
+    setState(() {
+      _busy = true;
+    });
+
+    try {
+      final MoonlitClaimResult result = await MoonlitIdleApi.claim();
+      _reload();
+      if (mounted) {
+        await showModalBottomSheet<void>(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: const Color(0xff17151b),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+          ),
+          builder: (BuildContext context) {
+            return IdleBattleReportSheet(result: result);
+          },
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$error')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _busy = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,7 +171,7 @@ class _MoonlitIdlePageState extends State<MoonlitIdlePage> {
             state: state,
             busy: _busy,
             onRefresh: () async => _reload(),
-            onClaim: () => _runAction(MoonlitIdleApi.claim),
+            onClaim: _claim,
             onStart: (MoonlitRoute route) => _runAction(
               () => MoonlitIdleApi.start(route.routeKey),
             ),

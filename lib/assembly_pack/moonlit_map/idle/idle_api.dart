@@ -24,21 +24,12 @@ class MoonlitIdleApi {
     return '探索已开始';
   }
 
-  static Future<String> claim() async {
+  static Future<MoonlitClaimResult> claim() async {
     final Map<String, dynamic> json = await _request(
       '$idleApiBase/claim_idle.php',
       method: 'POST',
     );
-    final List<dynamic> rewards =
-        (json['rewards'] as List<dynamic>?) ?? <dynamic>[];
-    if (rewards.isEmpty) {
-      return '探索完成';
-    }
-    final String text = rewards.map((dynamic item) {
-      final Map<String, dynamic> map = item as Map<String, dynamic>;
-      return '${map['name']} +${map['amount']}';
-    }).join('，');
-    return '获得：$text';
+    return MoonlitClaimResult.fromJson(json);
   }
 
   static Future<String> upgrade(String upgradeKey) async {

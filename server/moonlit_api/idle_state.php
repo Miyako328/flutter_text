@@ -57,6 +57,17 @@ try {
         ORDER BY t.stage_id ASC, res.sort_order ASC
     ")->fetchAll();
 
+    $routeMonsters = $pdo->query("
+        SELECT rm.route_id, r.route_key, rm.monster_key, rm.encounter_weight,
+               rm.min_encounters, rm.max_encounters, rm.route_difficulty,
+               m.name, m.base_threat, m.base_hp, m.battle_text, m.sort_order
+        FROM idle_route_monsters rm
+        JOIN idle_routes r ON r.id = rm.route_id
+        JOIN idle_monsters m ON m.monster_key = rm.monster_key
+        WHERE rm.enabled = 1
+        ORDER BY r.sort_order ASC, m.sort_order ASC
+    ")->fetchAll();
+
     $active = active_expedition($pdo);
 
     respond_success([
@@ -67,6 +78,7 @@ try {
         'upgrades' => $upgrades,
         'unlock_requirements' => $unlockRequirements,
         'stage_tickets' => $stageTickets,
+        'route_monsters' => $routeMonsters,
         'active_expedition' => $active,
         'server_time' => date('Y-m-d H:i:s'),
     ]);
