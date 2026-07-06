@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_text/gen/assets.gen.dart';
 
@@ -164,7 +166,8 @@ class IdleExpeditionMapPanel extends StatelessWidget {
                   left: heroPosition.dx - 52,
                   top: heroPosition.dy - 118,
                   child: _SylviaHeroButton(
-                    running: exploring,
+                    running: exploring && encounter == null,
+                    battle: encounter != null,
                     onTap: onHeroTap,
                   ),
                 ),
@@ -274,10 +277,12 @@ class _MapRouteNode {
 class _SylviaHeroButton extends StatefulWidget {
   const _SylviaHeroButton({
     required this.running,
+    required this.battle,
     required this.onTap,
   });
 
   final bool running;
+  final bool battle;
   final VoidCallback onTap;
 
   @override
@@ -314,9 +319,10 @@ class _SylviaHeroButtonState extends State<_SylviaHeroButton>
           final double wave = _controller.value < 0.5
               ? _controller.value * 2
               : (1 - _controller.value) * 2;
-          final double dy = widget.running ? 0 : -3 + (wave * 6);
+          final double dy = widget.running || widget.battle ? 0 : -3 + wave * 6;
+          final double dx = widget.battle ? (wave - 0.5) * 3 : 0;
           return Transform.translate(
-            offset: Offset(0, dy),
+            offset: Offset(dx, dy),
             child: _buildBody(),
           );
         },
@@ -325,7 +331,9 @@ class _SylviaHeroButtonState extends State<_SylviaHeroButton>
   }
 
   Widget _buildBody() {
-    final int frame = (_controller.value * 8).floor().clamp(0, 7);
+    final int frameCount = widget.battle ? 6 : 8;
+    final int frame =
+        (_controller.value * frameCount).floor().clamp(0, frameCount - 1);
     return SizedBox(
       width: 104,
       height: 132,
@@ -335,7 +343,7 @@ class _SylviaHeroButtonState extends State<_SylviaHeroButton>
           Positioned(
             bottom: 12,
             child: Container(
-              width: widget.running ? 70 : 62,
+              width: widget.running || widget.battle ? 70 : 62,
               height: 16,
               decoration: const BoxDecoration(
                 color: Color(0x88000000),
@@ -343,11 +351,14 @@ class _SylviaHeroButtonState extends State<_SylviaHeroButton>
               ),
             ),
           ),
-          widget.running
-              ? _buildRunFrame(frame)
-              : _buildImage(
-                  Assets.imagesSylviaSylviaIdle,
-                ),
+          if (widget.battle)
+            _buildBattleFrame(frame)
+          else if (widget.running)
+            _buildRunFrame(frame)
+          else
+            _buildImage(
+              Assets.imagesSylviaSylviaIdle,
+            ),
           const Positioned(
             bottom: 0,
             child: DecoratedBox(
@@ -391,6 +402,25 @@ class _SylviaHeroButtonState extends State<_SylviaHeroButton>
         return _buildImage(Assets.imagesSylviaRunRun6);
       default:
         return _buildImage(Assets.imagesSylviaRunRun7);
+    }
+  }
+
+  Widget _buildBattleFrame(int frame) {
+    switch (frame) {
+      case 0:
+        return _buildImage(Assets.imagesSylviaBattleBattle0);
+      case 1:
+        return _buildImage(Assets.imagesSylviaBattleBattle1);
+      case 2:
+        return _buildImage(Assets.imagesSylviaBattleBattle2);
+      case 3:
+        return _buildImage(Assets.imagesSylviaBattleBattle3);
+      case 4:
+        return _buildImage(Assets.imagesSylviaBattleBattle4);
+      case 5:
+        return _buildImage(Assets.imagesSylviaBattleBattle5);
+      default:
+        return _buildImage(Assets.imagesSylviaBattleBattle5);
     }
   }
 
@@ -441,118 +471,603 @@ class _MonsterMarker extends StatelessWidget {
       child: SizedBox(
         width: 64,
         height: 64,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(
-              Icons.warning_amber_rounded,
-              color: _MoonlitColors.gold,
-              size: 28,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Text(
-                encounter.monster.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: _MoonlitColors.text,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: MonsterPortrait(
+            monsterKey: encounter.monster.monsterKey,
+            monsterName: encounter.monster.name,
+            compact: true,
+          ),
         ),
       ),
     );
   }
 }
 
-class _LiveBattleOverlay extends StatelessWidget {
+class _LiveBattleOverlay extends StatefulWidget {
   const _LiveBattleOverlay({required this.encounter});
 
   final MoonlitActiveEncounter encounter;
 
   @override
+  State<_LiveBattleOverlay> createState() => _LiveBattleOverlayState();
+}
+
+class _LiveBattleOverlayState extends State<_LiveBattleOverlay>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 680),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return _GamePanel(
-      padding: const EdgeInsets.all(12),
-      highlight: true,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              const _GameIconSeal(
-                icon: Icons.local_fire_department_outlined,
-                active: true,
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '遭遇 ${encounter.monster.name}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: _MoonlitColors.text,
-                        fontWeight: FontWeight.w800,
+    final MoonlitActiveEncounter encounter = widget.encounter;
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (BuildContext context, Widget? _) {
+        final double impact = math.sin(_controller.value * math.pi * 2);
+        final double shake = impact.abs() > 0.72 ? impact * 2.4 : 0;
+        return Transform.translate(
+          offset: Offset(shake, 0),
+          child: _GamePanel(
+            padding: const EdgeInsets.all(12),
+            highlight: true,
+            child: Stack(
+              children: <Widget>[
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: CustomPaint(
+                      painter: _BattleEffectPainter(
+                        progress: _controller.value,
+                        monsterKey: encounter.monster.monsterKey,
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${encounter.resultLabel} · 胜率 ${encounter.winPercent}%',
-                      style: const TextStyle(
-                        color: _MoonlitColors.gold,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Transform.translate(
+                      offset: Offset(-shake * 0.6, 0),
+                      child: SizedBox(
+                        width: 76,
+                        height: 96,
+                        child: MonsterPortrait(
+                          monsterKey: encounter.monster.monsterKey,
+                          monsterName: encounter.monster.name,
+                          pulse: _controller.value,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _LiveBattleInfo(
+                        encounter: encounter,
+                        pulse: _controller.value,
                       ),
                     ),
                   ],
                 ),
-              ),
-              Text(
-                '${encounter.playerPower} / ${encounter.monsterThreat}',
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LiveBattleInfo extends StatelessWidget {
+  const _LiveBattleInfo({
+    required this.encounter,
+    required this.pulse,
+  });
+
+  final MoonlitActiveEncounter encounter;
+  final double pulse;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                '遭遇 ${encounter.monster.name}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  color: _MoonlitColors.muted,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                  color: _MoonlitColors.text,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          _BattleHpRow(
-            label: '希尔薇娅',
-            value: encounter.playerHpRatio,
-            color: _MoonlitColors.green,
-          ),
-          const SizedBox(height: 6),
-          _BattleHpRow(
-            label: encounter.monster.name,
-            value: encounter.monsterHpRatio,
-            color: _MoonlitColors.red,
-          ),
-          if (encounter.monster.battleText.isNotEmpty) ...<Widget>[
-            const SizedBox(height: 8),
+            ),
             Text(
-              encounter.monster.battleText,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              '${encounter.playerPower} / ${encounter.monsterThreat}',
               style: const TextStyle(
                 color: _MoonlitColors.muted,
                 fontSize: 12,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          '${encounter.resultLabel} · 胜率 ${encounter.winPercent}%',
+          style: const TextStyle(
+            color: _MoonlitColors.gold,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 10),
+        _BattleHpRow(
+          label: '希尔薇娅',
+          value: encounter.playerHpRatio,
+          color: _MoonlitColors.green,
+          pulse: pulse,
+        ),
+        const SizedBox(height: 6),
+        _BattleHpRow(
+          label: encounter.monster.name,
+          value: encounter.monsterHpRatio,
+          color: _MoonlitColors.red,
+          pulse: (pulse + 0.5) % 1,
+        ),
+        if (encounter.monster.battleText.isNotEmpty) ...<Widget>[
+          const SizedBox(height: 8),
+          Text(
+            encounter.monster.battleText,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: _MoonlitColors.muted,
+              fontSize: 12,
+            ),
+          ),
         ],
+      ],
+    );
+  }
+}
+
+class _BattleEffectPainter extends CustomPainter {
+  const _BattleEffectPainter({
+    required this.progress,
+    required this.monsterKey,
+  });
+
+  final double progress;
+  final String monsterKey;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Color accent = _accentFor(monsterKey);
+    final double slashPhase = (progress * 2) % 1;
+    final double slashAlpha = (1 - slashPhase).clamp(0, 1).toDouble();
+    final Paint slashPaint = Paint()
+      ..color = _MoonlitColors.gold.withValues(alpha: slashAlpha * 0.50)
+      ..strokeWidth = 2.2
+      ..strokeCap = StrokeCap.round
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.2);
+    final double slashX = size.width * (0.24 + slashPhase * 0.56);
+    canvas.drawLine(
+      Offset(slashX - size.width * 0.13, size.height * 0.20),
+      Offset(slashX + size.width * 0.07, size.height * 0.70),
+      slashPaint,
+    );
+
+    final Paint sparkPaint = Paint()..style = PaintingStyle.fill;
+    for (int i = 0; i < 9; i++) {
+      final double seed = i * 0.137;
+      final double t = (progress + seed) % 1;
+      final double x = size.width * (0.18 + ((seed * 7) % 0.70));
+      final double y = size.height * (0.72 - t * 0.56);
+      final double radius = 1.3 + (1 - t) * 2.4;
+      sparkPaint.color = accent.withValues(alpha: (1 - t) * 0.30);
+      canvas.drawCircle(Offset(x, y), radius, sparkPaint);
+    }
+
+    final Paint pulsePaint = Paint()
+      ..color = accent.withValues(
+        alpha: math.sin(progress * math.pi).abs() * 0.14,
+      )
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.4;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Offset.zero & size,
+        const Radius.circular(8),
+      ),
+      pulsePaint,
+    );
+  }
+
+  Color _accentFor(String key) {
+    switch (key) {
+      case 'black_forest_wolf':
+        return const Color(0xff7fa36e);
+      case 'mist_parasite':
+        return const Color(0xff9bb8b5);
+      case 'old_road_soldier':
+      case 'maclay_guard_echo':
+        return const Color(0xffc29a65);
+      case 'blood_contract_echo':
+        return const Color(0xffd64a3d);
+      case 'atlas_whisper':
+        return const Color(0xff9e7bff);
+      default:
+        return const Color(0xffffd27d);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _BattleEffectPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.monsterKey != monsterKey;
+  }
+}
+
+class MonsterPortrait extends StatelessWidget {
+  const MonsterPortrait({
+    required this.monsterKey,
+    required this.monsterName,
+    this.compact = false,
+    this.pulse = 0,
+    super.key,
+  });
+
+  final String monsterKey;
+  final String monsterName;
+  final bool compact;
+  final double pulse;
+
+  @override
+  Widget build(BuildContext context) {
+    final double glow = compact ? 0 : math.sin(pulse * math.pi).abs() * 0.30;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Color.lerp(
+              const Color(0xff3b252a),
+              const Color(0xff5a2c30),
+              glow,
+            )!,
+            const Color(0xff17151b),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(compact ? 999 : 8),
+        border: Border.all(
+          color: compact ? _MoonlitColors.red : _MoonlitColors.border,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(compact ? 999 : 8),
+        child: CustomPaint(
+          painter: _MonsterPortraitPainter(monsterKey, pulse: pulse),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(4, 0, 4, compact ? 3 : 6),
+              child: Text(
+                compact ? '!' : monsterName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: _MoonlitColors.text,
+                  fontSize: compact ? 11 : 10,
+                  fontWeight: FontWeight.w800,
+                  shadows: const <Shadow>[
+                    Shadow(color: Colors.black, blurRadius: 4),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
+  }
+}
+
+class _MonsterPortraitPainter extends CustomPainter {
+  const _MonsterPortraitPainter(this.monsterKey, {required this.pulse});
+
+  final String monsterKey;
+  final double pulse;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final Paint mist = Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(0, -0.25),
+        radius: 0.76,
+        colors: <Color>[
+          _accent.withValues(alpha: 0.35),
+          Colors.transparent,
+        ],
+      ).createShader(rect);
+    canvas.drawRect(rect, mist);
+
+    final Paint glow = Paint()
+      ..color = _accent.withValues(
+        alpha: 0.22 + math.sin(pulse * math.pi).abs() * 0.12,
+      )
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(size.width * 0.5, size.height * 0.50),
+        width: size.width * 0.72,
+        height: size.height * 0.62,
+      ),
+      glow,
+    );
+
+    switch (monsterKey) {
+      case 'black_forest_wolf':
+        _paintWolf(canvas, size);
+      case 'mist_parasite':
+        _paintParasite(canvas, size);
+      case 'old_road_soldier':
+      case 'maclay_guard_echo':
+        _paintSoldier(canvas, size);
+      case 'blood_contract_echo':
+        _paintBloodEcho(canvas, size);
+      case 'atlas_whisper':
+        _paintAtlas(canvas, size);
+      case 'rift_wanderer':
+      default:
+        _paintWanderer(canvas, size);
+    }
+
+    final Paint floor = Paint()..color = Colors.black.withValues(alpha: 0.40);
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(size.width * 0.5, size.height * 0.82),
+        width: size.width * 0.66,
+        height: size.height * 0.11,
+      ),
+      floor,
+    );
+  }
+
+  Color get _accent {
+    switch (monsterKey) {
+      case 'black_forest_wolf':
+        return const Color(0xff7fa36e);
+      case 'mist_parasite':
+        return const Color(0xff9bb8b5);
+      case 'old_road_soldier':
+      case 'maclay_guard_echo':
+        return const Color(0xffc29a65);
+      case 'blood_contract_echo':
+        return const Color(0xffd64a3d);
+      case 'atlas_whisper':
+        return const Color(0xff9e7bff);
+      default:
+        return const Color(0xffffd27d);
+    }
+  }
+
+  Paint get _bodyPaint => Paint()..color = const Color(0xff130e12);
+
+  Paint get _edgePaint => Paint()
+    ..color = _accent.withValues(alpha: 0.85)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.6;
+
+  void _paintWanderer(Canvas canvas, Size size) {
+    final Path body = Path()
+      ..moveTo(size.width * 0.35, size.height * 0.78)
+      ..quadraticBezierTo(
+        size.width * 0.28,
+        size.height * 0.45,
+        size.width * 0.45,
+        size.height * 0.26,
+      )
+      ..quadraticBezierTo(
+        size.width * 0.62,
+        size.height * 0.36,
+        size.width * 0.62,
+        size.height * 0.78,
+      )
+      ..close();
+    canvas.drawPath(body, _bodyPaint);
+    canvas.drawPath(body, _edgePaint);
+    _drawEye(canvas, size, const Offset(0.48, 0.42));
+    _drawSlash(
+      canvas,
+      size,
+      const Offset(0.38, 0.33),
+      const Offset(0.68, 0.50),
+    );
+  }
+
+  void _paintWolf(Canvas canvas, Size size) {
+    final Path body = Path()
+      ..moveTo(size.width * 0.18, size.height * 0.68)
+      ..lineTo(size.width * 0.34, size.height * 0.43)
+      ..lineTo(size.width * 0.44, size.height * 0.24)
+      ..lineTo(size.width * 0.50, size.height * 0.42)
+      ..lineTo(size.width * 0.73, size.height * 0.50)
+      ..lineTo(size.width * 0.59, size.height * 0.58)
+      ..lineTo(size.width * 0.66, size.height * 0.78)
+      ..lineTo(size.width * 0.39, size.height * 0.69)
+      ..close();
+    canvas.drawPath(body, _bodyPaint);
+    canvas.drawPath(body, _edgePaint);
+    _drawEye(canvas, size, const Offset(0.53, 0.46));
+  }
+
+  void _paintParasite(Canvas canvas, Size size) {
+    final Paint body = _bodyPaint;
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(size.width * 0.5, size.height * 0.48),
+        width: size.width * 0.34,
+        height: size.height * 0.42,
+      ),
+      body,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(size.width * 0.5, size.height * 0.48),
+        width: size.width * 0.34,
+        height: size.height * 0.42,
+      ),
+      _edgePaint,
+    );
+    for (final double x in <double>[0.30, 0.40, 0.60, 0.70]) {
+      _drawTentacle(canvas, size, x);
+    }
+    _drawEye(canvas, size, const Offset(0.50, 0.43));
+  }
+
+  void _paintSoldier(Canvas canvas, Size size) {
+    final Path helm = Path()
+      ..moveTo(size.width * 0.32, size.height * 0.42)
+      ..quadraticBezierTo(
+        size.width * 0.50,
+        size.height * 0.18,
+        size.width * 0.68,
+        size.height * 0.42,
+      )
+      ..lineTo(size.width * 0.62, size.height * 0.68)
+      ..lineTo(size.width * 0.38, size.height * 0.68)
+      ..close();
+    canvas.drawPath(helm, _bodyPaint);
+    canvas.drawPath(helm, _edgePaint);
+    _drawSlash(
+      canvas,
+      size,
+      const Offset(0.36, 0.49),
+      const Offset(0.64, 0.49),
+    );
+    _drawEye(canvas, size, const Offset(0.44, 0.47));
+    _drawEye(canvas, size, const Offset(0.56, 0.47));
+  }
+
+  void _paintBloodEcho(Canvas canvas, Size size) {
+    final Path body = Path()
+      ..moveTo(size.width * 0.50, size.height * 0.20)
+      ..cubicTo(
+        size.width * 0.76,
+        size.height * 0.44,
+        size.width * 0.67,
+        size.height * 0.75,
+        size.width * 0.50,
+        size.height * 0.80,
+      )
+      ..cubicTo(
+        size.width * 0.33,
+        size.height * 0.75,
+        size.width * 0.24,
+        size.height * 0.44,
+        size.width * 0.50,
+        size.height * 0.20,
+      );
+    canvas.drawPath(body, _bodyPaint);
+    canvas.drawPath(body, _edgePaint);
+    _drawEye(canvas, size, const Offset(0.50, 0.47));
+    _drawSlash(
+      canvas,
+      size,
+      const Offset(0.38, 0.60),
+      const Offset(0.62, 0.60),
+    );
+  }
+
+  void _paintAtlas(Canvas canvas, Size size) {
+    final Path crown = Path()
+      ..moveTo(size.width * 0.25, size.height * 0.60)
+      ..lineTo(size.width * 0.32, size.height * 0.28)
+      ..lineTo(size.width * 0.44, size.height * 0.48)
+      ..lineTo(size.width * 0.50, size.height * 0.22)
+      ..lineTo(size.width * 0.56, size.height * 0.48)
+      ..lineTo(size.width * 0.68, size.height * 0.28)
+      ..lineTo(size.width * 0.75, size.height * 0.60)
+      ..quadraticBezierTo(
+        size.width * 0.50,
+        size.height * 0.78,
+        size.width * 0.25,
+        size.height * 0.60,
+      );
+    canvas.drawPath(crown, _bodyPaint);
+    canvas.drawPath(crown, _edgePaint);
+    _drawEye(canvas, size, const Offset(0.50, 0.56));
+  }
+
+  void _drawEye(Canvas canvas, Size size, Offset ratio) {
+    canvas.drawCircle(
+      Offset(size.width * ratio.dx, size.height * ratio.dy),
+      size.shortestSide * 0.035,
+      Paint()..color = _accent,
+    );
+  }
+
+  void _drawSlash(Canvas canvas, Size size, Offset a, Offset b) {
+    canvas.drawLine(
+      Offset(size.width * a.dx, size.height * a.dy),
+      Offset(size.width * b.dx, size.height * b.dy),
+      Paint()
+        ..color = _accent.withValues(alpha: 0.82)
+        ..strokeWidth = 2
+        ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  void _drawTentacle(Canvas canvas, Size size, double x) {
+    final Path path = Path()
+      ..moveTo(size.width * 0.50, size.height * 0.62)
+      ..quadraticBezierTo(
+        size.width * x,
+        size.height * 0.75,
+        size.width * (x - 0.06),
+        size.height * 0.86,
+      );
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = const Color(0xff130e12)
+        ..strokeWidth = 5
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke,
+    );
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = _accent.withValues(alpha: 0.65)
+        ..strokeWidth = 1.3
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _MonsterPortraitPainter oldDelegate) {
+    return oldDelegate.monsterKey != monsterKey || oldDelegate.pulse != pulse;
   }
 }
 
@@ -561,11 +1076,13 @@ class _BattleHpRow extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
+    this.pulse = 0,
   });
 
   final String label;
   final double value;
   final Color color;
+  final double pulse;
 
   @override
   Widget build(BuildContext context) {
@@ -586,18 +1103,86 @@ class _BattleHpRow extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: value,
-              minHeight: 8,
-              backgroundColor: const Color(0xff332934),
-              color: color,
+          child: SizedBox(
+            height: 8,
+            child: CustomPaint(
+              painter: _BattleHpPainter(
+                value: value,
+                color: color,
+                pulse: pulse,
+              ),
             ),
           ),
         ),
       ],
     );
+  }
+}
+
+class _BattleHpPainter extends CustomPainter {
+  const _BattleHpPainter({
+    required this.value,
+    required this.color,
+    required this.pulse,
+  });
+
+  final double value;
+  final Color color;
+  final double pulse;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final RRect bg = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      const Radius.circular(999),
+    );
+    canvas.drawRRect(
+      bg,
+      Paint()..color = const Color(0xff332934),
+    );
+
+    final double width = size.width * value.clamp(0, 1);
+    if (width <= 0) {
+      return;
+    }
+
+    final RRect fill = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, width, size.height),
+      const Radius.circular(999),
+    );
+    canvas.drawRRect(
+      fill,
+      Paint()..color = color,
+    );
+
+    final double sheenWidth = math.min(size.width * 0.26, 54);
+    final double sheenX = (size.width + sheenWidth) * pulse - sheenWidth;
+    final Rect sheenRect = Rect.fromLTWH(
+      sheenX,
+      0,
+      sheenWidth,
+      size.height,
+    ).intersect(Rect.fromLTWH(0, 0, width, size.height));
+    if (!sheenRect.isEmpty) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(sheenRect, const Radius.circular(999)),
+        Paint()
+          ..shader = LinearGradient(
+            colors: <Color>[
+              Colors.white.withValues(alpha: 0),
+              Colors.white.withValues(alpha: 0.36),
+              Colors.white.withValues(alpha: 0),
+            ],
+          ).createShader(sheenRect),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _BattleHpPainter oldDelegate) {
+    return oldDelegate.value != value ||
+        oldDelegate.color != color ||
+        oldDelegate.pulse != pulse;
   }
 }
 
@@ -962,9 +1547,13 @@ class _BattleLogTile extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              _GameIconSeal(
-                icon: _iconForResult(log.resultLabel),
-                active: true,
+              SizedBox(
+                width: 54,
+                height: 70,
+                child: MonsterPortrait(
+                  monsterKey: log.monsterKey,
+                  monsterName: log.monsterName,
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -1008,18 +1597,6 @@ class _BattleLogTile extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  IconData _iconForResult(String label) {
-    if (label.contains('险')) {
-      return Icons.warning_amber_outlined;
-    }
-
-    if (label.contains('苦')) {
-      return Icons.shield_outlined;
-    }
-
-    return Icons.flash_on_outlined;
   }
 }
 
